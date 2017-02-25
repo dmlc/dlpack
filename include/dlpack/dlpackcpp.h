@@ -8,8 +8,8 @@
 
 #include <vector>
 #include <memory>
+#include <numeric>
 #include "./dlpack.h"
-
 namespace dlpack {
 
 // Example container wrapping of DLTensor.
@@ -40,10 +40,8 @@ class DLTContainer {
   }
   void Reshape(const std::vector<int64_t>& shape) {
     shape_ = shape;
-    int64_t sz = 1;
-    for (int64_t s : shape) {
-      sz *= s;
-    }
+    int64_t sz = std::accumulate(std::begin(shape), std::end(shape),
+                                 int64_t(1), std::multiplies<int64_t>());
     handle_.data = aligned_alloc(256, sz);
     handle_.shape = &shape_[0];
     handle_.ndim = static_cast<uint32_t>(shape.size());
