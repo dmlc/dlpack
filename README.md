@@ -12,3 +12,9 @@ This enables:
 - For final users, this could bring more operators, and possiblity of mixing usage between frameworks (e.g. pass a Torch Tensor into Caffe, use MXNet scheduler to schedule Torch Tensors)
 
 We do not intend to implement of Tensor and Ops, but instead use this as common interface to reuse tensor and ops across frameworks.
+
+## Credit
+The initial interface so far base on discussions between
+@soumith @piiswrong @Yangqing @naibaf7 @bhack @edgarriba @tqchen
+
+The future interface discussion will be based on issues on this repo.
