@@ -52,9 +52,9 @@ typedef struct {
  * \brief The type code options DLDataType.
  */
 typedef enum {
-  kInt = 0,
-  kUInt = 1,
-  kFloat = 2,
+  kInt = 0U,
+  kUInt = 1U,
+  kFloat = 2U,
 } DLDataTypeCode;
 
 /*!

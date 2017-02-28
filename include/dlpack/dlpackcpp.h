@@ -6,10 +6,15 @@
 #ifndef DLPACKCPP_H_
 #define DLPACKCPP_H_
 
-#include <vector>
+#include <cstdint>  // for int64_t etc
+#include <cstdlib>  // for free()
+#include <functional>  // for std::multiplies
 #include <memory>
 #include <numeric>
+#include <vector>
+
 #include "./dlpack.h"
+
 namespace dlpack {
 
 // Example container wrapping of DLTensor.
@@ -42,6 +47,7 @@ class DLTContainer {
     shape_ = shape;
     int64_t sz = std::accumulate(std::begin(shape), std::end(shape),
                                  int64_t(1), std::multiplies<int64_t>());
+    // Note: this won't work on OSX.
     handle_.data = aligned_alloc(256, sz);
     handle_.shape = &shape_[0];
     handle_.ndim = static_cast<uint32_t>(shape.size());
