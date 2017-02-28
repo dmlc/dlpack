@@ -66,8 +66,12 @@ typedef enum {
  *   - int8: type_code = 0, bits = 8, lanes=1
  */
 typedef struct {
-  /*! \brief Type code of base types */
-  DLDataTypeCode code;
+  /*!
+   * \brief Type code of base types.
+   * We keep it uint8_t instead of DLDataTypeCode for minimal memory
+   * footprint, but the value should be one of DLDataTypeCode enum values.
+   * */
+  uint8_t code;
   /*!
    * \brief Number of bits, common choices are 8, 16, 32.
    */
