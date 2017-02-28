@@ -36,16 +36,7 @@ typedef enum {
   // kCPUPinned = kCPU | kGPU
   kCPUPinned = 3,
   kOpenCL = 4,
-} DLDeviceKind;
-
-/*!
- * \brief The type code options DLDataType.
- */
-typedef enum {
-  kInt = 0U,
-  kUInt = 1U,
-  kFloat = 2U
-} DLTypeCodeKind;
+} DLDeviceType;
 
 /*!
  * \brief A Device context for Tensor and operator.
@@ -54,8 +45,17 @@ typedef struct {
   /*! \brief The device index */
   int device_id;
   /*! \brief The device type used in the device. */
-  int device_type;
+  DLDeviceType device_type;
 } DLContext;
+
+/*!
+ * \brief The type code options DLDataType.
+ */
+typedef enum {
+  kInt = 0U,
+  kUInt = 1U,
+  kFloat = 2U,
+} DLDataTypeCode;
 
 /*!
  * \brief The data type the tensor can hold.
@@ -66,7 +66,11 @@ typedef struct {
  *   - int8: type_code = 0, bits = 8, lanes=1
  */
 typedef struct {
-  /*! \brief Type code of base types */
+  /*!
+   * \brief Type code of base types.
+   * We keep it uint8_t instead of DLDataTypeCode for minimal memory
+   * footprint, but the value should be one of DLDataTypeCode enum values.
+   * */
   uint8_t code;
   /*!
    * \brief Number of bits, common choices are 8, 16, 32.
