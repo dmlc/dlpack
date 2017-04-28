@@ -100,7 +100,7 @@ typedef struct {
    */
   int64_t* strides;
   /*! \brief The offset in bytes to the beginning pointer to data */
-  size_t byte_offset;
+  uint64_t byte_offset;
 } DLTensor;
 
 }  // DLPACK_EXTERN_C
