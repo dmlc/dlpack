@@ -42,10 +42,10 @@ typedef enum {
  * \brief A Device context for Tensor and operator.
  */
 typedef struct {
-  /*! \brief The device index */
-  int device_id;
   /*! \brief The device type used in the device. */
   DLDeviceType device_type;
+  /*! \brief The device index */
+  int device_id;
 } DLContext;
 
 /*!
