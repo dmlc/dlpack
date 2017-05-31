@@ -47,9 +47,9 @@ if(BUILD_DOCS)
     add_subdirectory(docs)
 endif(BUILD_DOCS)
 
-set(DLPACK_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
+set(DLPACK_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 include_directories(${DLPACK_INCLUDE_DIR})
-add_executable(mock ${CMAKE_SOURCE_DIR}/src/mock.cc)
+add_executable(mock ${CMAKE_CURRENT_SOURCE_DIR}/src/mock.cc)
 
 
