@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 # Set variables:
 #   * PROJECT_NAME
 #   * PROJECT_VERSION
-project(dlpack VERSION 0.0.0 LANGUAGES C CXX)
+project(dlpack VERSION 0.1.0 LANGUAGES C CXX)
 
 #####
 # Change the default build type from Debug to Release, while still
@@ -48,8 +48,12 @@ if(BUILD_DOCS)
 endif(BUILD_DOCS)
 
 set(DLPACK_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
+list(APPEND DLPACK_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/contrib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 include_directories(${DLPACK_INCLUDE_DIR})
-add_executable(mock ${CMAKE_CURRENT_SOURCE_DIR}/src/mock.cc)
+
+set(DLPACK_MOCK_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/contrib/mock_main.cc
+                    ${CMAKE_CURRENT_SOURCE_DIR}/contrib/mock_c.c)
+add_executable(mock ${DLPACK_MOCK_SRCS})
 
 

@@ -3,14 +3,17 @@
  * \file dlpack.h
  * \brief The common header of DLPack.
  */
-#ifndef DLPACK_H_
-#define DLPACK_H_
+#ifndef DLPACK_DLPACK_H_
+#define DLPACK_DLPACK_H_
 
 #ifdef __cplusplus
 #define DLPACK_EXTERN_C extern "C"
 #else
 #define DLPACK_EXTERN_C
 #endif
+
+/*! \brief The current version of dlpack */
+#define DLPACK_VERSION 010
 
 /*! \brief DLPACK_DLL prefix for windows */
 #ifdef _WIN32
@@ -26,7 +29,9 @@
 #include <stdint.h>
 #include <stddef.h>
 
-DLPACK_EXTERN_C {
+#ifdef __cplusplus
+extern "C" {
+#endif
 /*!
  * \brief The device type in DLContext.
  */
@@ -106,6 +111,7 @@ typedef struct {
   /*! \brief The offset in bytes to the beginning pointer to data */
   uint64_t byte_offset;
 } DLTensor;
-
+#ifdef __cplusplus
 }  // DLPACK_EXTERN_C
-#endif  // DLPACK_H_
+#endif
+#endif  // DLPACK_DLPACK_H_

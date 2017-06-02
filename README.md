@@ -1,5 +1,7 @@
 # DLPack
 
+[![Build Status](https://travis-ci.org/dmlc/dlpack.svg?branch=master)](https://travis-ci.org/dmlc/dlpack)
+
 RFC for common tensor and operator guidelines in deep learning systems.
 Started by [this issue](https://github.com/dmlc/mxnet/issues/4735)
 
@@ -12,6 +14,11 @@ This enables:
 - For final users, this could bring more operators, and possiblity of mixing usage between frameworks (e.g. pass a Torch Tensor into Caffe, use MXNet scheduler to schedule Torch Tensors)
 
 We do not intend to implement of Tensor and Ops, but instead use this as common interface to reuse tensor and ops across frameworks.
+
+## Project Structure
+There are two major components so far
+- include: stablized headers
+- contrib: in progress unstable libraries
 
 ## Credit
 The initial interface so far base on discussions between

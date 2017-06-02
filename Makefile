@@ -1,24 +1,35 @@
-.PHONY: clean all test doc
+.PHONY: clean all test doc lint
 
-all: mock
+all: bin/mock
 
 LDFLAGS =
-CFLAGS =  -std=c++11 -Wall -O3 -Iinclude
+CFLAGS = -Wall -O3 -Iinclude -Icontrib
+CXXFLAGS = -std=c++11 $(CFLAGS)
 
-SRC = $(wildcard src/*.cc src/*/*.cc src/*/*/*.cc)
-ALL_OBJ = $(patsubst src/%.cc, build/%.o, $(SRC))
+SRC = $(wildcard contrib/*.cc contrib/*.c)
+ALL_CXX_OBJ = $(patsubst contrib/%.cc, build/%.o, $(SRC))
+ALL_C_OBJ = $(patsubst contrib/%.c, build/%.o, $(SRC))
+ALL_OBJ = $(ALL_CC_OBJ) $(ALL_CXX_OBJ)
 
 doc:
 	doxygen docs/Doxyfile
 
-build/%.o: src/%.cc
-	@mkdir -p $(@D)
-	$(CXX) $(CFLAGS) -MM -MT build/$*.o $< >build/$*.d
-	$(CXX) -c $(CFLAGS) -c $< -o $@
+lint:
+	./tests/scripts/task_lint.sh
 
-mock: $(ALL_OBJ)
+build/%.o: contrib/%.cc
 	@mkdir -p $(@D)
-	$(CXX) $(CFLAGS) -o $@ $(filter %.o %.a, $^) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -MM -MT build/$*.o $< >build/$*.d
+	$(CXX) -c $(CXXFLAGS) -c $< -o $@
+
+build/%.o: contrib/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -MM -MT build/$*.o $< >build/$*.d
+	$(CC) -c $(CFLAGS) -c $< -o $@
+
+bin/mock: $(ALL_OBJ)
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -o $@ $(filter %.o %.a, $^) $(LDFLAGS)
 
 clean:
 	$(RM) -rf build  */*/*/*~ */*.o */*/*.o */*/*/*.o */*.d */*/*.d */*/*/*.d

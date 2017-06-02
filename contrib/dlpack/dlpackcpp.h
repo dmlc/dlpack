@@ -3,8 +3,10 @@
  * \file dlpackcpp.h
  * \brief Example C++ wrapper of DLPack
  */
-#ifndef DLPACKCPP_H_
-#define DLPACKCPP_H_
+#ifndef DLPACK_DLPACKCPP_H_
+#define DLPACK_DLPACKCPP_H_
+
+#include <dlpack/dlpack.h>
 
 #include <cstdint>  // for int64_t etc
 #include <cstdlib>  // for free()
@@ -12,8 +14,6 @@
 #include <memory>
 #include <numeric>
 #include <vector>
-
-#include "./dlpack.h"
 
 namespace dlpack {
 
@@ -47,8 +47,8 @@ class DLTContainer {
     shape_ = shape;
     int64_t sz = std::accumulate(std::begin(shape), std::end(shape),
                                  int64_t(1), std::multiplies<int64_t>());
-    // Note: this won't work on OSX.
-    handle_.data = aligned_alloc(256, sz);
+    int ret = posix_memalign(&handle_.data, 256, sz);
+    if (ret != 0) throw std::bad_alloc();
     handle_.shape = &shape_[0];
     handle_.ndim = static_cast<uint32_t>(shape.size());
   }
@@ -62,4 +62,4 @@ class DLTContainer {
 };
 
 }  // namespace dlpack
-#endif  // DLPACKCPP_H_
+#endif  // DLPACK_DLPACKCPP_H_
