@@ -41,6 +41,8 @@ typedef enum {
   // kCPUPinned = kCPU | kGPU
   kCPUPinned = 3,
   kOpenCL = 4,
+  kMetal = 8,
+  kVPI = 9,
   kROCM = 10,
 } DLDeviceType;
 
