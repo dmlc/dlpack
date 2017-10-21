@@ -114,6 +114,27 @@ typedef struct {
   /*! \brief The offset in bytes to the beginning pointer to data */
   uint64_t byte_offset;
 } DLTensor;
+
+/*!
+ * \brief C Tensor object, manage memory of DLTensor. This data structure is
+ *  intended to faciliate the borrowing of DLTensor by another framework. It is
+ *  not meant to transfer the tensor. When the borrowing framework doesn't need
+ *  the tensor, it should call the deleter to notify the host that the resource
+ *  is no longer needed.
+ */
+typedef struct DLManagedTensor {
+  /*! \brief DLTensor which is being memory managed */
+  DLTensor dl_tensor;
+  /*! \brief the context of the original host framework of DLManagedTensor in
+   *   which DLManagedTensor is used in the framework. It can also be NULL.
+   */
+  void * manager_ctx;
+  /*! \brief Destructor signature void (*)(void*) - this should be called
+   *   to destruct manager_ctx which holds the DLManagedTensor. It can be NULL
+   *   if there is no way for the caller to provide a reasonable destructor.
+   */
+  void (*deleter)(struct DLManagedTensor * self);
+} DLManagedTensor;
 #ifdef __cplusplus
 }  // DLPACK_EXTERN_C
 #endif
