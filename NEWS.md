@@ -6,7 +6,7 @@ This file records the changes in DLPack in reverse chronological order.
 ## v0.2
 - New device types
   - kDLMetal for Apple Metal device
-  - kVPI for verilog simulator memory
+  - kDLVPI for verilog simulator memory
   - kDLROCM for AMD GPUs
 - Add prefix DL to all enum constant values
   - This requires dependent frameworks to upgrade their reference to these constant
