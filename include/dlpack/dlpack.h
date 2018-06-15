@@ -66,6 +66,16 @@ typedef enum {
 } DLDataTypeCode;
 
 /*!
+ * \brief The storage type code options DLStorageDataType.
+ */
+typedef enum {
+  kDLUnknownStorage = -1,
+  kDLDefaultStorage = 0U,
+  kDLRowSparseStorage = 1U,
+  kDLCSRStorage = 2U,
+} DLStorageDataTypeCode;
+
+/*!
  * \brief The data type the tensor can hold.
  *
  *  Examples
@@ -87,6 +97,15 @@ typedef struct {
   /*! \brief Number of lanes in the type, used for vector types. */
   uint16_t lanes;
 } DLDataType;
+
+typedef struct {
+  /*!
+   * \brief Type code of base storage types.
+   * We keep it uint8_t instead of DLStorageTypeCode for minimal memory
+   * footprint, but the value should be one of DLStorageTypeCode enum values.
+   * */
+  uint8_t code;
+} DLStorageType;
 
 /*!
  * \brief Plain C Tensor object, does not manage memory.
