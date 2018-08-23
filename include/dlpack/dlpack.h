@@ -13,7 +13,7 @@
 #endif
 
 /*! \brief The current version of dlpack */
-#define DLPACK_VERSION 010
+#define DLPACK_VERSION 020
 
 /*! \brief DLPACK_DLL prefix for windows */
 #ifdef _WIN32
@@ -36,14 +36,31 @@ extern "C" {
  * \brief The device type in DLContext.
  */
 typedef enum {
+  /*! \brief CPU device */
   kDLCPU = 1,
+  /*! \brief CUDA GPU device */
   kDLGPU = 2,
-  // kDLCPUPinned = kDLCPU | kDLGPU
+  /*!
+   * \brief Pinned CUDA GPU device by cudaMallocHost
+   * \note kDLCPUPinned = kDLCPU | kDLGPU
+   */
   kDLCPUPinned = 3,
+  /*! \brief OpenCL devices. */
   kDLOpenCL = 4,
+  /*! \brief Vulkan buffer for next generation graphics. */
+  kDLVulkan = 7,
+  /*! \brief Metal for Apple GPU. */
   kDLMetal = 8,
+  /*! \brief Verilog simulator buffer */
   kDLVPI = 9,
+  /*! \brief ROCm GPUs for AMD GPUs */
   kDLROCM = 10,
+  /*!
+   * \brief Reserved extension device type,
+   * used for quickly test extension device
+   * The semantics can differ depending on the implementation.
+   */
+  kDLExtDev = 12,
 } DLDeviceType;
 
 /*!
