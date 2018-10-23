@@ -61,6 +61,8 @@ typedef enum {
    * The semantics can differ depending on the implementation.
    */
   kDLExtDev = 12,
+  /* \brief CCE C for Huawei DaVinci core */
+  KDLCce = 13,
 } DLDeviceType;
 
 /*!
