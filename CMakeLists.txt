@@ -42,6 +42,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 message(STATUS "C++11 support has been enabled by default.")
 
 option(BUILD_DOCS "Set to ON to build documentation" OFF)
+option(BUILD_MOCK "Build mock executable" ON)
 
 if(BUILD_DOCS)
     add_subdirectory(docs)
@@ -52,9 +53,11 @@ list(APPEND DLPACK_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/contrib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 include_directories(${DLPACK_INCLUDE_DIR})
 
-set(DLPACK_MOCK_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/contrib/mock_main.cc
-                    ${CMAKE_CURRENT_SOURCE_DIR}/contrib/mock_c.c)
-add_executable(mock ${DLPACK_MOCK_SRCS})
+if(BUILD_MOCK)
+  set(DLPACK_MOCK_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/contrib/mock_main.cc
+                      ${CMAKE_CURRENT_SOURCE_DIR}/contrib/mock_c.c)
+  add_executable(mock ${DLPACK_MOCK_SRCS})
+endif()
 
 add_library(dlpack INTERFACE)
 add_library(${PROJECT_NAME}::dlpack ALIAS dlpack)
