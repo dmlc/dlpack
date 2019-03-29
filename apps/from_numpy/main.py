@@ -76,8 +76,9 @@ def make_dl_tensor(array):
   dl_tensor.ctx = DLContext(1, 0)
   dl_tensor.ndim = array.ndim
   dl_tensor.dtype = DLDataType.TYPE_MAP[str(array.dtype)]
-  dl_tensor.strides = array.ctypes.strides_as(ctypes.c_int64)
+  # For 0-dim ndarrays, strides and shape will be NULL
   dl_tensor.shape = array.ctypes.shape_as(ctypes.c_int64)
+  dl_tensor.strides = array.ctypes.strides_as(ctypes.c_int64)
   dl_tensor.byte_offset = 0
   return dl_tensor
 
