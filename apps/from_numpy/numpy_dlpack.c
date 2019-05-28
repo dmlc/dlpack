@@ -1,7 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <dlpack/dlpack.h>
 
-DLManagedTensor given;
+DLManagedTensor *given = NULL;
 
 void display(DLManagedTensor a) {
   puts("On C side:");
@@ -37,9 +38,15 @@ void display(DLManagedTensor a) {
 
 void Give(DLManagedTensor dl_managed_tensor) {
   display(dl_managed_tensor);
-  given = dl_managed_tensor;
+  given = (DLManagedTensor *) malloc(sizeof(DLManagedTensor));
+  *given = dl_managed_tensor;
 }
 
 void Finalize() {
-  given.deleter(&given);
+  given->deleter(given);
+}
+
+void FreeHandle() {
+  free(given);
+  given = NULL;
 }
