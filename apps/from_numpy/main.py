@@ -4,7 +4,7 @@ import numpy as np
 import gc
 import ctypes
 
-libmain = ctypes.cdll.LoadLibrary("libmain.so")
+libmain = ctypes.cdll.LoadLibrary("./libmain.so")
 
 class DLContext(ctypes.Structure):
   _fields_ = [("device_type", ctypes.c_int),
@@ -63,14 +63,15 @@ def make_manager_ctx(obj):
 def dl_managed_tensor_deleter(dl_managed_tensor_handle):
   void_p = dl_managed_tensor_handle.contents.manager_ctx
   pyobj = ctypes.cast(void_p, ctypes.py_object)
-  print("Deleting:")
+  print("Deleting manager_ctx:")
   display(pyobj.value)
   ctypes.pythonapi.Py_DecRef(pyobj)
+  print("Deleter self...")
+  libmain.FreeHandle()
   print("Done")
 
 def make_dl_tensor(array):
   # You may check array.flags here, e.g. array.flags['C_CONTIGUOUS']
-  ndim = array.ndim
   dl_tensor = DLTensor()
   dl_tensor.data = array.ctypes.data_as(ctypes.c_void_p)
   dl_tensor.ctx = DLContext(1, 0)
@@ -79,6 +80,8 @@ def make_dl_tensor(array):
   # For 0-dim ndarrays, strides and shape will be NULL
   dl_tensor.shape = array.ctypes.shape_as(ctypes.c_int64)
   dl_tensor.strides = array.ctypes.strides_as(ctypes.c_int64)
+  for i in range(array.ndim):
+    dl_tensor.strides[i] //= array.itemsize
   dl_tensor.byte_offset = 0
   return dl_tensor
 
@@ -98,6 +101,7 @@ def main():
   del c_obj
   gc.collect()
   libmain.Finalize()
+  print("-------------------------")
 
 if __name__ == "__main__":
   main()

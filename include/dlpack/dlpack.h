@@ -138,8 +138,8 @@ typedef struct {
   /*! \brief The shape of the tensor */
   int64_t* shape;
   /*!
-   * \brief strides of the tensor,
-   *  can be NULL, indicating tensor is compact.
+   * \brief strides of the tensor (in number of elements, not bytes)
+   *  can be NULL, indicating tensor is compact and row-majored.
    */
   int64_t* strides;
   /*! \brief The offset in bytes to the beginning pointer to data */
@@ -163,6 +163,7 @@ typedef struct DLManagedTensor {
   /*! \brief Destructor signature void (*)(void*) - this should be called
    *   to destruct manager_ctx which holds the DLManagedTensor. It can be NULL
    *   if there is no way for the caller to provide a reasonable destructor.
+   *   The destructors deletes the argument self as well.
    */
   void (*deleter)(struct DLManagedTensor * self);
 } DLManagedTensor;
