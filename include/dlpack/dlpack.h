@@ -137,6 +137,8 @@ typedef struct {
   DLDataType dtype;
   /*! \brief The shape of the tensor */
   int64_t* shape;
+  /*! \brief The layout of the tensor (ie. NCHW) */
+  char* layout;
   /*!
    * \brief strides of the tensor (in number of elements, not bytes)
    *  can be NULL, indicating tensor is compact and row-majored.
