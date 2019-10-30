@@ -80,6 +80,7 @@ typedef enum {
   kDLInt = 0U,
   kDLUInt = 1U,
   kDLFloat = 2U,
+  kDLBfloat = 3U,
 } DLDataTypeCode;
 
 /*!
