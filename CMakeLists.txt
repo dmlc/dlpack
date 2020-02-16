@@ -48,10 +48,7 @@ if(BUILD_DOCS)
     add_subdirectory(docs)
 endif(BUILD_DOCS)
 
-set(DLPACK_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-list(APPEND DLPACK_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/contrib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
-include_directories(${DLPACK_INCLUDE_DIR})
 
 if(BUILD_MOCK)
   set(DLPACK_MOCK_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/contrib/mock_main.cc
@@ -61,6 +58,17 @@ endif()
 
 add_library(dlpack INTERFACE)
 add_library(${PROJECT_NAME}::dlpack ALIAS dlpack)
+
+target_include_directories(
+    dlpack
+    INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/contrib>
+)
+
+if(BUILD_MOCK)
+  target_link_libraries(mock PRIVATE dlpack)
+endif()
 
 # Installation (https://github.com/forexample/package-example) {
 
