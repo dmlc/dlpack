@@ -81,6 +81,8 @@ typedef enum {
   kDLUInt = 1U,
   kDLFloat = 2U,
   kDLBfloat = 4U,
+  kDLComplex = 8U,    // C/C++/Python layout (compact struct per complex number)
+  kDLComplexS = 16U,  // alternative layout (a struct with two pointers to real & imag arrays)
 } DLDataTypeCode;
 
 /*!
