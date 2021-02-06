@@ -77,9 +77,18 @@ typedef struct {
  * \brief The type code options DLDataType.
  */
 typedef enum {
+  /*! \brief signed integer */
   kDLInt = 0U,
+  /*! \brief unsigned integer */
   kDLUInt = 1U,
+  /*! \brief IEEE floating point */
   kDLFloat = 2U,
+  /*!
+   * \brief Opaque handle type, reserved for testing purposes.
+   * Frameworks need to agree on the handle data type for the exchange to be well-defined.
+   */
+  kDLOpaqueHandle = 3U,
+  /*! \brief bfloat16 */
   kDLBfloat = 4U,
 } DLDataTypeCode;
 
