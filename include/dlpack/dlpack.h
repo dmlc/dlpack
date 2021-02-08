@@ -90,7 +90,11 @@ typedef enum {
   kDLOpaqueHandle = 3U,
   /*! \brief bfloat16 */
   kDLBfloat = 4U,
-  kDLComplex = 5U,  // C/C++/Python layout (compact struct per complex number)
+  /*!
+   * \brief complex number
+   * C/C++/Python layout: compact struct per complex number)
+   */
+  kDLComplex = 5U,
 } DLDataTypeCode;
 
 /*!
