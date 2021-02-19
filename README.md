@@ -1,6 +1,6 @@
 # DLPack: Open In Memory Tensor Structure
 
-[![Build Status](https://github.com/dmlc/dlpack/workflows/CI/badge.svg)](https://github.com/dmlc/dlpack/actions?query=workflow%3ACI)
+[![Build Status](https://github.com/dmlc/dlpack/actions/workflows/main.yaml/badge.svg?branch=main)](https://github.com/dmlc/dlpack/actions/workflows/main.yaml)
 
 DLPack is an open in-memory tensor structure to for sharing tensor among frameworks. DLPack enables
 
