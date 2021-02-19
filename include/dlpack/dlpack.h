@@ -73,6 +73,9 @@ typedef struct {
   int device_id;
 } DLDevice;
 
+/*!
+ * \brief This is an alias for DLDevice. Notice that this will be removed in the next release.
+ */
 typedef DLDevice DLContext;
 
 /*!
