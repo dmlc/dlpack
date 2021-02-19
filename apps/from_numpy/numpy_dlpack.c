@@ -9,9 +9,9 @@ void display(DLManagedTensor a) {
   int i;
   int ndim = a.dl_tensor.ndim;
   printf("data = %p\n", a.dl_tensor.data);
-  printf("ctx = (device_type = %d, device_id = %d)\n",
-          (int) a.dl_tensor.ctx.device_type,
-          (int) a.dl_tensor.ctx.device_id);
+  printf("device = (device_type = %d, device_id = %d)\n",
+          (int) a.dl_tensor.device.device_type,
+          (int) a.dl_tensor.device.device_id);
   printf("dtype = (code = %d, bits = %d, lanes = %d)\n",
           (int) a.dl_tensor.dtype.code,
           (int) a.dl_tensor.dtype.bits,
