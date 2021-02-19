@@ -1,6 +1,6 @@
 # DLPack: Open In Memory Tensor Structure
 
-[![Build Status](https://travis-ci.org/dmlc/dlpack.svg?branch=main)](https://travis-ci.org/dmlc/dlpack)
+[![Build Status](https://github.com/dmlc/dlpack/workflows/CI/badge.svg)](https://github.com/dmlc/dlpack/actions?query=workflow%3ACI)
 
 DLPack is an open in-memory tensor structure to for sharing tensor among frameworks. DLPack enables
 
