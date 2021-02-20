@@ -26,8 +26,8 @@ class DLTContainer {
     handle_.dtype.code = kDLFloat;
     handle_.dtype.bits = 32U;
     handle_.dtype.lanes = 1U;
-    handle_.ctx.device_type = kDLCPU;
-    handle_.ctx.device_id = 0;
+    handle_.device.device_type = kDLCPU;
+    handle_.device.device_id = 0;
     handle_.shape = nullptr;
     handle_.strides = nullptr;
     handle_.byte_offset = 0;

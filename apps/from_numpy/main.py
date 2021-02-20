@@ -6,7 +6,7 @@ import ctypes
 
 libmain = ctypes.cdll.LoadLibrary("./libmain.so")
 
-class DLContext(ctypes.Structure):
+class DLDevice(ctypes.Structure):
   _fields_ = [("device_type", ctypes.c_int),
               ("device_id", ctypes.c_int)]
 
@@ -26,7 +26,7 @@ class DLDataType(ctypes.Structure):
 
 class DLTensor(ctypes.Structure):
   _fields_ = [("data", ctypes.c_void_p),
-              ("ctx", DLContext),
+              ("device", DLDevice),
               ("ndim", ctypes.c_int),
               ("dtype", DLDataType),
               ("shape", ctypes.POINTER(ctypes.c_int64)),
@@ -74,7 +74,7 @@ def make_dl_tensor(array):
   # You may check array.flags here, e.g. array.flags['C_CONTIGUOUS']
   dl_tensor = DLTensor()
   dl_tensor.data = array.ctypes.data_as(ctypes.c_void_p)
-  dl_tensor.ctx = DLContext(1, 0)
+  dl_tensor.device = DLDevice(1, 0)
   dl_tensor.ndim = array.ndim
   dl_tensor.dtype = DLDataType.TYPE_MAP[str(array.dtype)]
   # For 0-dim ndarrays, strides and shape will be NULL

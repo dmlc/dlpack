@@ -33,7 +33,7 @@
 extern "C" {
 #endif
 /*!
- * \brief The device type in DLContext.
+ * \brief The device type in DLDevice.
  */
 typedef enum {
   /*! \brief CPU device */
@@ -64,14 +64,19 @@ typedef enum {
 } DLDeviceType;
 
 /*!
- * \brief A Device context for Tensor and operator.
+ * \brief A Device for Tensor and operator.
  */
 typedef struct {
   /*! \brief The device type used in the device. */
   DLDeviceType device_type;
   /*! \brief The device index */
   int device_id;
-} DLContext;
+} DLDevice;
+
+/*!
+ * \brief This is an alias for DLDevice. Notice that this will be removed in the next release.
+ */
+typedef DLDevice DLContext;
 
 /*!
  * \brief The type code options DLDataType.
@@ -144,8 +149,8 @@ typedef struct {
    * \endcode
    */
   void* data;
-  /*! \brief The device context of the tensor */
-  DLContext ctx;
+  /*! \brief The device of the tensor */
+  DLDevice device;
   /*! \brief Number of dimensions */
   int ndim;
   /*! \brief The data type of the pointer*/
