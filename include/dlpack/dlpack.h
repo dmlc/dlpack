@@ -39,12 +39,12 @@ typedef enum {
   /*! \brief CPU device */
   kDLCPU = 1,
   /*! \brief CUDA GPU device */
-  kDLGPU = 2,
+  kDLCUDA = 2,
   /*!
    * \brief Pinned CUDA GPU device by cudaMallocHost
-   * \note kDLCPUPinned = kDLCPU | kDLGPU
+   * \note kDLCUDAHost = kDLCPU | kDLCUDA
    */
-  kDLCPUPinned = 3,
+  kDLCUDAHost = 3,
   /*! \brief OpenCL devices. */
   kDLOpenCL = 4,
   /*! \brief Vulkan buffer for next generation graphics. */
