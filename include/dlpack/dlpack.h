@@ -13,7 +13,7 @@
 #endif
 
 /*! \brief The current version of dlpack */
-#define DLPACK_VERSION 040
+#define DLPACK_VERSION 050
 
 /*! \brief DLPACK_DLL prefix for windows */
 #ifdef _WIN32
@@ -41,8 +41,7 @@ typedef enum {
   /*! \brief CUDA GPU device */
   kDLCUDA = 2,
   /*!
-   * \brief Pinned CUDA GPU device by cudaMallocHost
-   * \note kDLCUDAHost = kDLCPU | kDLCUDA
+   * \brief Pinned CUDA CPU memory by cudaMallocHost
    */
   kDLCUDAHost = 3,
   /*! \brief OpenCL devices. */
@@ -72,11 +71,6 @@ typedef struct {
   /*! \brief The device index */
   int device_id;
 } DLDevice;
-
-/*!
- * \brief This is an alias for DLDevice. Notice that this will be removed in the next release.
- */
-typedef DLDevice DLContext;
 
 /*!
  * \brief The type code options DLDataType.
