@@ -55,11 +55,19 @@ typedef enum {
   /*! \brief ROCm GPUs for AMD GPUs */
   kDLROCM = 10,
   /*!
+   * \brief Pinned ROCm CPU memory allocated by hipMallocHost
+   */
+  kDLROCMHost = 11,
+  /*!
    * \brief Reserved extension device type,
    * used for quickly test extension device
    * The semantics can differ depending on the implementation.
    */
   kDLExtDev = 12,
+  /*!
+   * \brief CUDA managed/unified memory allocated by cudaMallocManaged
+   */
+  kDLCUDAManaged = 13,
 } DLDeviceType;
 
 /*!
