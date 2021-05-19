@@ -76,7 +76,10 @@ typedef enum {
 typedef struct {
   /*! \brief The device type used in the device. */
   DLDeviceType device_type;
-  /*! \brief The device index */
+  /*!
+   * \brief The device index.
+   * For vanilla CPU memory, pinned memory, or managed memory, this is set to 0.
+   */
   int device_id;
 } DLDevice;
 
