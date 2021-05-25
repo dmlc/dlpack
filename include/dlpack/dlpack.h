@@ -12,8 +12,15 @@
 #define DLPACK_EXTERN_C
 #endif
 
-/*! \brief The current version of dlpack */
-#define DLPACK_VERSION 050
+/*! \brief The current version of dlpack
+ *  This is stored in the form `major | (minor << 8) | (bugfix << 16)`
+ */
+#define DLPACK_VERSION 0 | (5 << 8) | (0 << 16)
+
+/*! \brief The ABI version of dlpack
+ *  This is used to indicate backwards-incompatible ABI changes.
+ */
+#define DLPACK_ABI_VERSION 1
 
 /*! \brief DLPACK_DLL prefix for windows */
 #ifdef _WIN32
@@ -32,6 +39,25 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/*!
+ * \brief A struct representing the DLPack API/ABI versions.
+ */
+typedef struct {
+  uint32_t version;
+  uint32_t abi_version;
+} DLVersionInfo;
+
+/*!
+ * \brief A function returning the current DLPack version.
+ */
+DLVersionInfo DLVersion_GetCurrentVersion() {
+  DLVersionInfo info;
+  info.version = DLPACK_VERSION;
+  info.abi_version = DLPACK_ABI_VERSION;
+  return info;
+}
+
+
 /*!
  * \brief The device type in DLDevice.
  */
