@@ -105,6 +105,8 @@ typedef enum {
    * (C/C++/Python layout: compact struct per complex number)
    */
   kDLComplex = 5U,
+    /*! \brief Boolean */
+  kDLBool = 6U,
 } DLDataTypeCode;
 
 /*!
@@ -115,6 +117,7 @@ typedef enum {
  *   - float4(vectorized 4 float): type_code = 2, bits = 32, lanes=4
  *   - int8: type_code = 0, bits = 8, lanes=1
  *   - std::complex<float>: type_code = 5, bits = 64, lanes = 1
+ *   - bool: type_code = 6, bits = 8, lanes=1
  */
 typedef struct {
   /*!
