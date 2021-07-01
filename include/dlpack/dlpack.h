@@ -13,7 +13,7 @@
 #endif
 
 /*! \brief The current version of dlpack */
-#define DLPACK_VERSION 050
+#define DLPACK_VERSION 60
 
 /*! \brief DLPACK_DLL prefix for windows */
 #ifdef _WIN32
