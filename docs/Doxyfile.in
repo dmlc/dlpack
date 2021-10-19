@@ -1,6 +1,6 @@
 PROJECT_NAME           = @PROJECT_NAME@
 PROJECT_NUMBER         = @PROJECT_VERSION@
-PROJECT_BRIEF          = "RFC for common tensor and operator guideline in deep learning system"
+PROJECT_BRIEF          = "Common in-memory tensor structure and operator interface for deep learning and other systems"
 STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@ \
                          @PROJECT_BINARY_DIR@
 OUTPUT_LANGUAGE        = English
