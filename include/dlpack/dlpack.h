@@ -69,20 +69,9 @@ typedef enum {
    */
   kDLCUDAManaged = 13,
   /*!
-   * \brief OneAPI GPU devices,
-   * dev.has(sycl::aspect::gpu) returns true
+   * \brief OneAPI non-partititioned devices
    */
-  kDLONEAPI_GPU = 14,
-  /*!
-   * \brief OneAPI CPU devices,
-   * dev.has(sycl::aspect::cpu) returns true
-   */
-  kDLONEAPI_CPU = 15,
-  /*!
-   * \brief OneAPI accelerator devices,
-   * dev.has(sycl::aspect::accelerator) returns true
-   */
-  kDLONEAPI_ACCELERATOR = 16,
+  kDLOneAPI = 14,
 } DLDeviceType;
 
 /*!
