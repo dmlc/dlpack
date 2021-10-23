@@ -69,7 +69,7 @@ typedef enum {
    */
   kDLCUDAManaged = 13,
   /*!
-   * \brief OneAPI non-partititioned devices
+   * \brief OneAPI non-partitioned devices
    */
   kDLOneAPI = 14,
 } DLDeviceType;
