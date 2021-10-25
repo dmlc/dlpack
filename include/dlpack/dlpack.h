@@ -69,7 +69,10 @@ typedef enum {
    */
   kDLCUDAManaged = 13,
   /*!
-   * \brief OneAPI non-partitioned devices
+   * \brief Unified shared memory allocated on a oneAPI non-partititioned
+   * device. Call to oneAPI runtime is required to determine the device
+   * type, the USM allocation type and the sycl context it is bound to.
+   *
    */
   kDLOneAPI = 14,
 } DLDeviceType;
