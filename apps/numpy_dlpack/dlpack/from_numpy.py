@@ -8,6 +8,9 @@ from .dlpack import DLManagedTensor, DLDevice, DLDataType, _c_str_dltensor
 ctypes.pythonapi.PyMem_RawMalloc.restype = ctypes.c_void_p
 ctypes.pythonapi.PyMem_RawFree.argtypes = [ctypes.c_void_p]
 
+ctypes.pythonapi.PyCapsule_New.restype=ctypes.py_object
+ctypes.pythonapi.PyCapsule_New.argtypes=[ctypes.c_void_p, ctypes.c_char_p, ctypes.c_void_p]
+
 
 class _Holder:
     """A wrapper around a numpy array to keep track of references to the underlying memory.
@@ -66,10 +69,6 @@ def from_numpy(np_array: np.ndarray):
     ----------
     np_array : np.ndarray
         The source numpy array that will be converted.
-
-    from_dlpack : Callable
-        A function that takes a dlpack pycapsule and returns an array
-        created from it.
 
     Returns
     -------

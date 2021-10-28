@@ -43,6 +43,7 @@ class DLDataTypeCode(ctypes.c_uint8):
     kDLInt = 0
     kDLUInt = 1
     kDLFloat = 2
+    kDLOpaquePointer = 3
     kDLBfloat = 4
     kDLComplex = 5
 
@@ -52,7 +53,8 @@ class DLDataTypeCode(ctypes.c_uint8):
             self.kDLUInt: "uint",
             self.kDLFloat: "float",
             self.kDLBfloat: "bfloat",
-            self.kDLComplex: "complex"
+            self.kDLComplex: "complex",
+            self.kDLOpaquePointer: "void_p"
         }[self.value]
 
 
@@ -91,36 +93,6 @@ class DLTensor(ctypes.Structure):
         ("byte_offset", ctypes.c_uint64),
     ]
 
-    @property
-    def itemsize(self):
-        return self.dtype.lanes * self.dtype.bits // 8
-
-    @property
-    def __array_interface__(self):
-        shape = tuple(self.shape[dim] for dim in range(self.ndim))
-        if self.strides:
-            strides = tuple(
-                self.strides[dim] * self.itemsize for dim in range(self.ndim)
-            )
-        else:
-            # Array is compact, make it numpy compatible.
-            strides = []
-            for i, s in enumerate(shape):
-                cumulative = 1
-                for e in range(i + 1, self.ndim):
-                    cumulative *= shape[e]
-                strides.append(cumulative * self.itemsize)
-            strides = tuple(strides)
-        typestr = "|" + str(self.dtype.type_code)[0] + str(self.itemsize)
-        return dict(
-            version=3,
-            shape=shape,
-            strides=strides,
-            data=(self.data, True),
-            offset=self.byte_offset,
-            typestr=typestr,
-        )
-
 
 class DLManagedTensor(ctypes.Structure):
     _fields_ = [
@@ -128,7 +100,3 @@ class DLManagedTensor(ctypes.Structure):
         ("manager_ctx", ctypes.c_void_p),
         ("deleter", ctypes.CFUNCTYPE(None, ctypes.c_void_p)),
     ]
-
-    @property
-    def __array_interface__(self):
-        return self.dl_tensor.__array_interface__
