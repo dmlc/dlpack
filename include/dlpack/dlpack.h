@@ -68,6 +68,13 @@ typedef enum {
    * \brief CUDA managed/unified memory allocated by cudaMallocManaged
    */
   kDLCUDAManaged = 13,
+  /*!
+   * \brief Unified shared memory allocated on a oneAPI non-partititioned
+   * device. Call to oneAPI runtime is required to determine the device
+   * type, the USM allocation type and the sycl context it is bound to.
+   *
+   */
+  kDLOneAPI = 14,
 } DLDeviceType;
 
 /*!
