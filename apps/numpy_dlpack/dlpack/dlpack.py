@@ -3,9 +3,38 @@ import ctypes
 _c_str_dltensor = b"dltensor"
 
 
+class DLDeviceType(ctypes.c_int):
+    kDLCPU = 1
+    kDLCUDA = 2
+    kDLCUDAHost = 3
+    kDLOpenCL = 4
+    kDLVulkan = 7
+    kDLMetal = 8
+    kDLVPI = 9
+    kDLROCM = 10
+    kDLROCMHost = 11
+    kDLCUDAManaged = 13
+    kDLOneAPI = 14
+
+    def __str__(self):
+        return {
+            self.kDLCPU : "CPU",
+            self.kDLCUDA: "CUDA",
+            self.kDLCUDAHost: "CUDAHost",
+            self.kDLOpenCL: "OpenCL",
+            self.kDLVulkan: "Vulkan",
+            self.kDLMetal: "Metal",
+            self.kDLVPI: "VPI",
+            self.kDLROCM: "ROCM",
+            self.kDLROCMHost: "ROMCHost",
+            self.kDLCUDAManaged: "CUDAManaged",
+            self.kDLOneAPI: "oneAPI",
+            }[self.value]
+
+
 class DLDevice(ctypes.Structure):
     _fields_ = [
-        ("device_type", ctypes.c_int),
+        ("device_type", DLDeviceType),
         ("device_id", ctypes.c_int),
     ]
 
@@ -15,6 +44,7 @@ class DLDataTypeCode(ctypes.c_uint8):
     kDLUInt = 1
     kDLFloat = 2
     kDLBfloat = 4
+    kDLComplex = 5
 
     def __str__(self):
         return {
@@ -22,6 +52,7 @@ class DLDataTypeCode(ctypes.c_uint8):
             self.kDLUInt: "uint",
             self.kDLFloat: "float",
             self.kDLBfloat: "bfloat",
+            self.kDLComplex: "complex"
         }[self.value]
 
 
@@ -32,13 +63,20 @@ class DLDataType(ctypes.Structure):
         ("lanes", ctypes.c_uint16),
     ]
     TYPE_MAP = {
-        "bool": (1, 1, 1),
-        "int32": (0, 32, 1),
-        "int64": (0, 64, 1),
-        "uint32": (1, 32, 1),
-        "uint64": (1, 64, 1),
-        "float32": (2, 32, 1),
-        "float64": (2, 64, 1),
+        "bool": (DLDataTypeCode.kDLUInt, 1, 1),
+        "int8": (DLDataTypeCode.kDLInt, 8, 1),
+        "int16": (DLDataTypeCode.kDLInt, 16, 1),
+        "int32": (DLDataTypeCode.kDLInt, 32, 1),
+        "int64": (DLDataTypeCode.kDLInt, 64, 1),
+        "uint8": (DLDataTypeCode.kDLUInt, 8, 1),
+        "uint16": (DLDataTypeCode.kDLUInt, 16, 1),
+        "uint32": (DLDataTypeCode.kDLUInt, 32, 1),
+        "uint64": (DLDataTypeCode.kDLUInt, 64, 1),
+        "float16": (DLDataTypeCode.kDLFloat, 16, 1),
+        "float32": (DLDataTypeCode.kDLFloat, 32, 1),
+        "float64": (DLDataTypeCode.kDLFloat, 64, 1),
+        "complex64": (DLDataTypeCode.kDLComplex, 64, 1),
+        "complex128": (DLDataTypeCode.kDLComplex, 128, 1)
     }
 
 
