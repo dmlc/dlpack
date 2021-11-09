@@ -143,9 +143,16 @@ typedef struct {
  */
 typedef struct {
   /*!
-   * \brief The opaque data pointer points to the allocated data. This will be
-   * CUDA device pointer or cl_mem handle in OpenCL. This pointer is always
-   * aligned to 256 bytes as in CUDA.
+   * \brief The data pointer points to the allocated data. This will be CUDA
+   * device pointer or cl_mem handle in OpenCL. It may be opaque on some device
+   * types. This pointer is always aligned to 256 bytes as in CUDA. The
+   * `byte_offset` field should be used to point to the beginning of the data.
+   *
+   * Note that as of Nov 2021, multiply libraries (CuPy, PyTorch, TensorFlow,
+   * TVM, perhaps others) do not adhere to this 256 byte aligment requirement
+   * on CPU/CUDA/ROCm, and always use `byte_offset=0`.  This must be fixed
+   * (after which this note will be updated); at the moment it is recommended
+   * to not rely on the data pointer being correctly aligned.
    *
    * For given DLTensor, the size of memory required to store the contents of
    * data is calculated as follows:
