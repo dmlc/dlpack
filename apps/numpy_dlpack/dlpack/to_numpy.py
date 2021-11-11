@@ -8,7 +8,9 @@ ctypes.pythonapi.PyCapsule_IsValid.argtypes = [ctypes.py_object, ctypes.c_char_p
 ctypes.pythonapi.PyCapsule_GetPointer.restype = ctypes.c_void_p
 ctypes.pythonapi.PyCapsule_GetPointer.argtypes = [ctypes.py_object, ctypes.c_char_p]
 
-def array_interface_from_dl_tensor(dlt):
+def _array_interface_from_dl_tensor(dlt):
+    """Constructs NumPy's array_interface dictionary
+    from `dlpack.DLTensor` descriptor."""
     assert isinstance(dlt, DLTensor)
     shape = tuple(dlt.shape[dim] for dim in range(dlt.ndim))
     itemsize = dlt.dtype.lanes * dlt.dtype.bits // 8
@@ -73,5 +75,5 @@ def to_numpy(pycapsule) -> np.ndarray:
     )
     dl_managed_tensor_ptr = ctypes.cast(dl_managed_tensor, ctypes.POINTER(DLManagedTensor))
     dl_managed_tensor = dl_managed_tensor_ptr.contents
-    holder = _Holder(array_interface_from_dl_tensor(dl_managed_tensor.dl_tensor), pycapsule)
+    holder = _Holder(_array_interface_from_dl_tensor(dl_managed_tensor.dl_tensor), pycapsule)
     return np.ctypeslib.as_array(holder)
