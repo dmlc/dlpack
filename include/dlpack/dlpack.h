@@ -75,6 +75,8 @@ typedef enum {
    *
    */
   kDLOneAPI = 14,
+  /*! \brief Qualcomm Hexagon DSP */
+  kDLHexagon = 15,
 } DLDeviceType;
 
 /*!
