@@ -27,9 +27,9 @@
 #endif
 
 #ifdef __cplusplus
-#define DLPACK_INT32_ENUM_TYPE : int32_t
+#define DLPACK_INT32_ENUM_ANNOTATION : int32_t
 #else
-#define DLPACK_INT32_ENUM_TYPE
+#define DLPACK_INT32_ENUM_ANNOTATION
 #endif
 
 #include <stdint.h>
@@ -41,7 +41,7 @@ extern "C" {
 /*!
  * \brief The device type in DLDevice.
  */
-typedef enum DLPACK_INT32_ENUM_TYPE {
+typedef enum DLPACK_INT32_ENUM_ANNOTATION {
   /*! \brief CPU device */
   kDLCPU = 1,
   /*! \brief CUDA GPU device */
@@ -93,7 +93,7 @@ typedef struct {
    * \brief The device index.
    * For vanilla CPU memory, pinned memory, or managed memory, this is set to 0.
    */
-  int device_id;
+  int32_t device_id;
 } DLDevice;
 
 /*!
