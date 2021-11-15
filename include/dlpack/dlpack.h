@@ -75,6 +75,8 @@ typedef enum {
    *
    */
   kDLOneAPI = 14,
+  /*! \brief GPU support for next generation WebGPU standard. */
+  kDLWebGPU = 15,
 } DLDeviceType;
 
 /*!
