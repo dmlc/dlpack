@@ -26,6 +26,12 @@
 #define DLPACK_DLL
 #endif
 
+#ifdef __cplusplus
+#define DLPACK_INT32_ENUM_ANNOTATION : int32_t
+#else
+#define DLPACK_INT32_ENUM_ANNOTATION
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -35,7 +41,7 @@ extern "C" {
 /*!
  * \brief The device type in DLDevice.
  */
-typedef enum {
+typedef enum DLPACK_INT32_ENUM_ANNOTATION {
   /*! \brief CPU device */
   kDLCPU = 1,
   /*! \brief CUDA GPU device */
@@ -91,7 +97,7 @@ typedef struct {
    * \brief The device index.
    * For vanilla CPU memory, pinned memory, or managed memory, this is set to 0.
    */
-  int device_id;
+  int32_t device_id;
 } DLDevice;
 
 /*!
@@ -176,7 +182,7 @@ typedef struct {
   /*! \brief The device of the tensor */
   DLDevice device;
   /*! \brief Number of dimensions */
-  int ndim;
+  int32_t ndim;
   /*! \brief The data type of the pointer*/
   DLDataType dtype;
   /*! \brief The shape of the tensor */
