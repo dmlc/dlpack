@@ -1,0 +1,58 @@
+name: Build Doc
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test_linux:
+    name: Linux
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Configuring Test Environment
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install python3.9 build-essential doxygen
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        python3.9 get-pip.py
+        python3.9 -m pip install -U pip wheel
+        python3.9 -m pip install cmake ninja
+
+        # create the _static and _templates directories under the docs/source
+        # directory if they don't exist already. This needs to be done for
+        # Sphinx to run without errors. It tries to find these directories and
+        # fails if they don't exist.
+        mkdir -p ./docs/source/_static
+        mkdir -p ./docs/source/_templates
+
+        python3.9 --version
+        python3.9 -m pip --version
+        doxygen --version
+        make --version
+        cmake --version
+        ninja --version
+
+    - name: Installing dependencies
+      run: |
+        python3.9 -m pip install -r doc_requirements.txt
+
+    - name: Testing CMakeLists.txt
+      run: |
+        mkdir build
+        cd build
+        cmake .. -G Ninja -DCMAKE_INSTALL_PREFIX=./install -DBUILD_DOCS=ON
+        ninja
+        ninja install
+
+    - name: Testing Makefile
+      run: |
+        make doc

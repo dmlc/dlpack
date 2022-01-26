@@ -1,4 +1,4 @@
-.PHONY: clean all test doc lint
+.PHONY: clean all test doc lint show_docs
 
 all: bin/mock
 
@@ -13,6 +13,10 @@ ALL_OBJ = $(ALL_CC_OBJ) $(ALL_CXX_OBJ)
 
 doc:
 	doxygen docs/Doxyfile
+	$(MAKE) -C docs html
+
+show_docs:
+	@python -c "import webbrowser; webbrowser.open_new_tab('file://$(PWD)/docs/build/html/index.html')"
 
 lint:
 	./tests/scripts/task_lint.sh
@@ -32,4 +36,4 @@ bin/mock: $(ALL_OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $(filter %.o %.a, $^) $(LDFLAGS)
 
 clean:
-	$(RM) -rf build  */*/*/*~ */*.o */*/*.o */*/*/*.o */*.d */*/*.d */*/*/*.d
+	$(RM) -rf build  */*/*/*~ */*.o */*/*.o */*/*/*.o */*.d */*/*.d */*/*/*.d docs/build docs/doxygen
