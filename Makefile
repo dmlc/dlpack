@@ -16,7 +16,7 @@ doc:
 	$(MAKE) -C docs html
 
 show_docs:
-	@python -c "import webbrowser; webbrowser.open_new_tab('file://$(PWD)/docs/build/html/index.html')"
+	@python3 -m http.server --directory docs/build/html
 
 lint:
 	./tests/scripts/task_lint.sh
