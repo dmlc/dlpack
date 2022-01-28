@@ -5,7 +5,7 @@
 The following dependencies must be downloaded in order to build docs:
 
 - Doxygen (On debian distros, simply run `sudo apt -y install doxygen`)
-- Python dependencies present in the `doc_requirement.txt` file in the root directory of the project. Run `python3 -m pip install -r doc_requirements.txt` to install them.
+- Python dependencies present in the `doc_requirements.txt` file in the root directory of the project. Run `python3 -m pip install -r doc_requirements.txt` to install them.
 
 Once the dependencies are installed, docs can be built using either CMake or the Makefile from the root directory of the project.
 
