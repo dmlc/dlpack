@@ -6,6 +6,9 @@
 #ifndef DLPACK_DLPACK_H_
 #define DLPACK_DLPACK_H_
 
+/**
+ * \brief Compatibility with C++
+ */
 #ifdef __cplusplus
 #define DLPACK_EXTERN_C extern "C"
 #else
@@ -26,12 +29,6 @@
 #define DLPACK_DLL
 #endif
 
-#ifdef __cplusplus
-#define DLPACK_INT32_ENUM_ANNOTATION : int32_t
-#else
-#define DLPACK_INT32_ENUM_ANNOTATION
-#endif
-
 #include <stdint.h>
 #include <stddef.h>
 
@@ -41,7 +38,11 @@ extern "C" {
 /*!
  * \brief The device type in DLDevice.
  */
-typedef enum DLPACK_INT32_ENUM_ANNOTATION {
+#ifdef __cplusplus
+typedef enum : int32_t {
+#else
+typedef enum {
+#endif
   /*! \brief CPU device */
   kDLCPU = 1,
   /*! \brief CUDA GPU device */
