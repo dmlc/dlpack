@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/dmlc/dlpack/actions/workflows/main.yaml/badge.svg?branch=main)](https://github.com/dmlc/dlpack/actions/workflows/main.yaml)
 
-DLPack is an open in-memory tensor structure for sharing tensor among frameworks. DLPack enables
+DLPack is an open in-memory tensor structure for sharing tensors among frameworks. DLPack enables
 
 - Easier sharing of operators between deep learning frameworks.
 - Easier wrapping of vendor level operator implementations, allowing collaboration when introducing new devices/ops.
