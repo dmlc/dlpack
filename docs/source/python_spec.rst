@@ -48,13 +48,6 @@ producer; the producer must synchronize or wait on the stream when necessary.
 In the common case of the default stream being used, synchronization will be
 unnecessary so asynchronous execution is enabled.
 
-.. warning::
-   In practice this will typically work pretty well, but it may fail. When a
-   library does ``from_dlpack(...)``, it will create an array with an associated
-   device but it may be incorrect. Since libraries will typically have a device
-   associated with each array, there may be cases where devices compare as equal
-   but the data doesn't actually reside on the same device. 
-
 
 Implementation
 ~~~~~~~~~~~~~~
