@@ -8,8 +8,8 @@ if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
 )
 set SOURCEDIR=source
-set SPHINXOPTS=-Dbreathe_projects.dlpack=../doxygen/xml
-set BUILDDIR=build
+set SPHINXOPTS=-Dbreathe_projects.dlpack=../doxygen/xml -WT --keep-going
+set BUILDDIR=build/latest
 
 if "%1" == "" goto help
 
@@ -26,7 +26,7 @@ if errorlevel 9009 (
 	exit /b 1
 )
 
-%SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+%SPHINXBUILD% -b %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
 goto end
 
 :help
