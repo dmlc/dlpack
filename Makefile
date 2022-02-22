@@ -16,7 +16,7 @@ doc:
 	$(MAKE) -C docs html
 
 show_docs:
-	@python3 -m http.server --directory docs/build/html
+	@python3 -m http.server --directory docs/build/latest
 
 lint:
 	./tests/scripts/task_lint.sh

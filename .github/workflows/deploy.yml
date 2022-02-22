@@ -35,5 +35,5 @@ jobs:
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
         git config --global user.email "dlpack-gh-actions-bot@nomail"
         git config --global user.name "dlpack-gh-actions-bot"
-        ghp-import -m "Generate DLPack website" -b gh-pages docs/build/html
+        ghp-import -m "Generate DLPack website" -b gh-pages docs/build
         git push origin gh-pages -f

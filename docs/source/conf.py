@@ -17,12 +17,12 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'dlpack'
+project = 'DLPack'
 copyright = '2022, DLPack contributors'
 author = 'DLPack contributors'
 
 # The full version, including alpha/beta/rc tags
-release = '0.6'
+release = '0.6.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -30,7 +30,7 @@ release = '0.6'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['breathe']
+extensions = ['sphinx.ext.intersphinx', 'breathe']
 
 # Add any paths that contain templates here, relative to this directory.
 # templates_path = ['_templates']
@@ -39,6 +39,26 @@ extensions = ['breathe']
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
+
+intersphinx_mapping = {
+    "array_api": ("https://data-apis.org/array-api/latest", None),
+}
+
+html_use_index = True
+html_domain_indices = True
+
+html_theme_options = {
+    "github_url": "https://github.com/dmlc/dlpack",
+    "use_edit_page_button": True,
+    "show_toc_level": 1,
+}
+
+html_context = {
+    "github_user": "dmlc",
+    "github_repo": "dlpack",
+    "github_version": "main",
+    "doc_path": "docs/source",
+}
 
 
 # -- Breathe configuration ---------------------------------------------------
@@ -59,4 +79,4 @@ html_theme = 'pydata_sphinx_theme' # 'alabaster'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ['_static']
+html_static_path = ['_static']
