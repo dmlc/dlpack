@@ -31,7 +31,7 @@ jobs:
 
     - name: Deploying on GitHub Pages
       run: |
-        touch docs/build/html/.nojekyll
+        touch docs/build/.nojekyll
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
         git config --global user.email "dlpack-gh-actions-bot@nomail"
         git config --global user.name "dlpack-gh-actions-bot"
