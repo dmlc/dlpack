@@ -17,10 +17,13 @@ developers. Highlights include:
   WebGPU, Hexagon
 * Already a standard with wide community adoption and support:
 
+  * `NumPy <https://numpy.org/doc/stable/release/1.22.0-notes.html#add-nep-47-compatible-dlpack-support>`_
   * `CuPy <https://docs.cupy.dev/en/stable/reference/generated/cupy.fromDlpack.html>`_
   * `PyTorch <https://pytorch.org/docs/stable/dlpack.html>`_
   * `Tensorflow <https://www.tensorflow.org/api_docs/python/tf/experimental/dlpack/from_dlpack>`_
   * `MXNet <https://mxnet.apache.org/versions/master/api/python/docs/_modules/mxnet/dlpack.html>`_
+  * `TVM <https://tvm.apache.org/docs/reference/api/python/contrib.html#module-tvm.contrib.dlpack>`_
+  * `mpi4py <https://mpi4py.readthedocs.io/en/stable/overview.html#support-for-gpu-aware-mpi>`_
 
 * Clean C ABI compatible.
 
