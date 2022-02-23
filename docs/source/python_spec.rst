@@ -153,3 +153,4 @@ ctypes, cffi, etc:
 * MXNet: `ctypes <https://github.com/apache/incubator-mxnet/blob/master/python/mxnet/dlpack.py>`__
 * TVM: `ctypes <https://github.com/apache/tvm/blob/main/python/tvm/_ffi/_ctypes/ndarray.py>`__,
   `Cython <https://github.com/apache/tvm/blob/main/python/tvm/_ffi/_cython/ndarray.pxi>`__
+* mpi4py: `Cython <https://github.com/mpi4py/mpi4py/blob/master/src/mpi4py/MPI/asdlpack.pxi>`_
