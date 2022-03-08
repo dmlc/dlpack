@@ -126,8 +126,9 @@ typedef enum {
 } DLDataTypeCode;
 
 /*!
- * \brief The data type the tensor can hold. Currently, non-native endianness isn't
- * supported. Attempt to export such array must raise an error.
+ * \brief The data type the tensor can hold. The data type is assumed to follow the
+ * native endian-ness. An explicit error message should be raised when attempting to
+ * export an array with non-native endianness
  *
  *  Examples
  *   - float: type_code = 2, bits = 32, lanes=1
