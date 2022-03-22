@@ -15,8 +15,11 @@
 #define DLPACK_EXTERN_C
 #endif
 
-/*! \brief The current version of dlpack */
+/*! \brief The current API version of dlpack */
 #define DLPACK_VERSION 60
+
+/*! \brief The current ABI version of dlpack */
+#define DLPACK_ABI_VERSION 1
 
 /*! \brief DLPACK_DLL prefix for windows */
 #ifdef _WIN32
