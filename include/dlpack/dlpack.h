@@ -18,6 +18,9 @@
 /*! \brief The current version of dlpack */
 #define DLPACK_VERSION 60
 
+/*! \brief The current ABI version of dlpack */
+#define DLPACK_ABI_VERSION 1
+
 /*! \brief DLPACK_DLL prefix for windows */
 #ifdef _WIN32
 #ifdef DLPACK_EXPORTS
