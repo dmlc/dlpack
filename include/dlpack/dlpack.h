@@ -15,7 +15,7 @@
 #define DLPACK_EXTERN_C
 #endif
 
-/*! \brief The current API version of dlpack */
+/*! \brief The current version of dlpack */
 #define DLPACK_VERSION 60
 
 /*! \brief The current ABI version of dlpack */
