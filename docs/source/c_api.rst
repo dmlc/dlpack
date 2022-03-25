@@ -30,6 +30,9 @@ Structs
 .. doxygenstruct:: DLDataType
    :members:
 
+.. doxygenstruct:: DLPackVersion
+   :members:
+
 .. doxygenstruct:: DLTensor
    :members:
 

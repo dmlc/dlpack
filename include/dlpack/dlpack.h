@@ -155,18 +155,19 @@ typedef struct {
 } DLDataType;
 
 /*!
+ * \brief The DLPack and DLPack ABI versions of the tensor.
+ */
+typedef struct {
+  /*! \brief DLPack version. */
+  uint8_t dlpack;
+  /*! \brief DLPack ABI version. */
+  uint8_t abi;
+} DLPackVersion;
+
+/*!
  * \brief Plain C Tensor object, does not manage memory.
  */
 typedef struct {
-  /*!
-  * \brief The DLPack and ABI versions of the tensor. The exporting library
-  *  should set the DLPack version to DLPACK_VERSION and ABI version to
-  *  DLPACK_ABI_VERSION.
-  */
-  struct {
-    uint8_t dlpack;
-    uint8_t abi;
-  } version;
   /*!
    * \brief The data pointer points to the allocated data. This will be CUDA
    * device pointer or cl_mem handle in OpenCL. It may be opaque on some device
@@ -209,15 +210,12 @@ typedef struct {
   int64_t* strides;
   /*! \brief The offset in bytes to the beginning pointer to data */
   uint64_t byte_offset;
+  /*! \brief The DLPack and DLPack ABI versions. The exporting library
+   *  should set the DLPack version to DLPACK_VERSION and ABI version to
+   *  DLPACK_ABI_VERSION. */
+  DLPackVersion version;
   /*! \brief Mark the data readonly. */
   uint8_t readonly;
-  /*!
-  * \brief Endianness of the data. 1 for non-native endianness and
-  *  0 for native endianness.
-  */
-  uint8_t endianness;
-  /*! \brief Alignment of the data. */
-  uint32_t alignment;
 } DLTensor;
 
 /*!
