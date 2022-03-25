@@ -19,7 +19,7 @@
 #define DLPACK_VERSION 60
 
 /*! \brief The current ABI version of dlpack */
-#define DLPACK_ABI_VERSION 1
+#define DLPACK_ABI_VERSION 2
 
 /*! \brief DLPACK_DLL prefix for windows */
 #ifdef _WIN32
@@ -159,6 +159,15 @@ typedef struct {
  */
 typedef struct {
   /*!
+  * \brief The DLPack and ABI versions of the tensor. The exporting library
+  *  should set the DLPack version to DLPACK_VERSION and ABI version to
+  *  DLPACK_ABI_VERSION.
+  */
+  struct {
+    uint8_t dlpack;
+    uint8_t abi;
+  } version;
+  /*!
    * \brief The data pointer points to the allocated data. This will be CUDA
    * device pointer or cl_mem handle in OpenCL. It may be opaque on some device
    * types. This pointer is always aligned to 256 bytes as in CUDA. The
@@ -200,6 +209,15 @@ typedef struct {
   int64_t* strides;
   /*! \brief The offset in bytes to the beginning pointer to data */
   uint64_t byte_offset;
+  /*! \brief Mark the data readonly. */
+  uint8_t readonly;
+  /*!
+  * \brief Endianness of the data. 1 for non-native endianness and
+  *  0 for native endianness.
+  */
+  uint8_t endianness;
+  /*! \brief Alignment of the data. */
+  uint32_t alignment;
 } DLTensor;
 
 /*!

@@ -10,6 +10,8 @@ Macros
 
 .. doxygendefine:: DLPACK_VERSION
 
+.. doxygendefine:: DLPACK_ABI_VERSION
+
 .. doxygendefine:: DLPACK_DLL
 
 Enumerations
