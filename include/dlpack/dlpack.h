@@ -16,7 +16,7 @@
 #endif
 
 /*! \brief The current version of dlpack */
-#define DLPACK_VERSION 60
+#define DLPACK_VERSION 70
 
 /*! \brief The current ABI version of dlpack */
 #define DLPACK_ABI_VERSION 2
@@ -216,27 +216,54 @@ typedef struct {
   DLPackVersion version;
   /*! \brief Mark the data readonly. */
   uint8_t readonly;
-} DLTensor;
+} DLTensorVersioned;
 
 /*!
- * \brief C Tensor object, manage memory of DLTensor. This data structure is
- *  intended to facilitate the borrowing of DLTensor by another framework. It is
+ * \brief C Tensor object, manage memory of DLTensorVersioned. This data structure is
+ *  intended to facilitate the borrowing of DLTensorVersioned by another framework. It is
  *  not meant to transfer the tensor. When the borrowing framework doesn't need
  *  the tensor, it should call the deleter to notify the host that the resource
  *  is no longer needed.
  */
-typedef struct DLManagedTensor {
-  /*! \brief DLTensor which is being memory managed */
-  DLTensor dl_tensor;
-  /*! \brief the context of the original host framework of DLManagedTensor in
-   *   which DLManagedTensor is used in the framework. It can also be NULL.
+typedef struct DLManagedTensorVersioned {
+  /*! \brief DLTensorVersioned which is being memory managed */
+  DLTensorVersioned dl_tensor;
+  /*! \brief the context of the original host framework of DLManagedTensorVersioned in
+   *   which DLManagedTensorVersioned is used in the framework. It can also be NULL.
    */
   void * manager_ctx;
   /*! \brief Destructor signature void (*)(void*) - this should be called
-   *   to destruct manager_ctx which holds the DLManagedTensor. It can be NULL
+   *   to destruct manager_ctx which holds the DLManagedTensorVersioned. It can be NULL
    *   if there is no way for the caller to provide a reasonable destructor.
    *   The destructors deletes the argument self as well.
    */
+  void (*deleter)(struct DLManagedTensorVersioned * self);
+} DLManagedTensorVersioned;
+
+
+/* ABI v1 (no version info exported). Present for backward-compatibility. */
+
+/*!
+ * \brief Plain C Tensor object, does not manage memory. This is an outdated
+ *  struct without version info. Use the new DLTensorVersioned instead.
+ */
+typedef struct {
+  void* data;
+  DLDevice device;
+  int32_t ndim;
+  DLDataType dtype;
+  int64_t* shape;
+  int64_t* strides;
+  uint64_t byte_offset;
+} DLTensor;
+
+/*!
+ * \brief C Tensor object, manage memory of DLTensor. This is an outdated
+ *  struct without version info. Use the new DLManagedTensorVersioned instead.
+ */
+typedef struct DLManagedTensor {
+  DLTensor dl_tensor;
+  void * manager_ctx;
   void (*deleter)(struct DLManagedTensor * self);
 } DLManagedTensor;
 #ifdef __cplusplus

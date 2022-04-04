@@ -16,11 +16,12 @@ The array API will offer the following syntax for data interchange:
 1. A ``from_dlpack(x)`` function, which accepts (array) objects with a
    ``__dlpack__`` method and uses that method to construct a new array
    containing the data from ``x``.
-2. ``__dlpack__(self, stream=None, version=None)`` and
-   ``__dlpack_device__(version=None)`` methods on the
-   array object, which will be called from within ``from_dlpack``, to query
-   what device the array is on (may be needed to pass in the correct
-   stream, e.g. in the case of multiple GPUs) and to access the data.
+2. ``__dlpack__(self, stream=None, version=None)``, ``__dlpack_info__()``,
+   and ``__dlpack_device__()`` methods on the array object, which will be
+   called from within ``from_dlpack``, to access the data, to get the
+   maximum supported DLPack version, and to query what device the array
+   is on (may be needed to pass in the correct stream, e.g. in the case
+   of multiple GPUs).
 
 
 Semantics
@@ -49,6 +50,14 @@ producer; the producer must synchronize or wait on the stream when necessary.
 In the common case of the default stream being used, synchronization will be
 unnecessary so asynchronous execution is enabled.
 
+A DLPack version can be requested by passing the ``version`` keyword. The
+consumer should call the ``__dlpack_info__`` method to get the maximum
+DLPack version supported by the producer and request for a version both
+support e.g. ``min(producer_version, consumer_version)``. If the consumer
+doesn't support any version below the producer's maximum version, a
+``BufferError`` should be raised. Similarly, If the producer doesn't
+support the requested version, it should also raise a ``BufferError``.
+
 
 Implementation
 ~~~~~~~~~~~~~~
@@ -66,27 +75,30 @@ struct members, gray text enum values of supported devices and data
 types.*
 
 The ``__dlpack__`` method will produce a ``PyCapsule`` containing a
-``DLManagedTensor`` that is compatible with the DLPack and DLPack ABI
-version requested by the consumer. It will be consumed immediately
-within ``from_dlpack`` - therefore it is consumed exactly once, and it
-will not be visible to users of the Python API.
+``DLManagedTensorVersioned`` or a ``DLManagedTensor`` that is
+compatible with the DLPack and DLPack ABI version requested by the
+consumer. It will be consumed immediately within ``from_dlpack`` -
+therefore it is consumed exactly once, and it will not be visible
+to users of the Python API.
 
 The producer must set the ``PyCapsule`` name to ``"dltensor"`` if ABI
 version 1 is requested and ``"versioned_dltensor"`` if ABI version >= 2
 is requested so that it can be inspected by name, and set
-``PyCapsule_Destructor`` that calls the ``deleter`` of the ``DLManagedTensor``
-when the ``"dltensor"``-named or ``"versioned_dltensor"``-named capsule is
-no longer needed.
+``PyCapsule_Destructor`` that calls the ``deleter`` of the
+``DLManagedTensorVersioned`` or ``DLManagedTensor`` when the
+``"versioned_dltensor"``-named or ``"dltensor"``-named capsule is no
+longer needed.
 
-The consumer must transfer ownership of the ``DLManangedTensor`` from the
-capsule to its own object. It does so by renaming the capsule to
-``"used_dltensor"`` to ensure that ``PyCapsule_Destructor`` will not get
-called (ensured if ``PyCapsule_Destructor`` calls ``deleter`` only for
-capsules whose name is ``"dltensor"`` or ``"versioned_dltensor"``), but
-the ``deleter`` of the ``DLManagedTensor`` will be called by the destructor
-of the consumer library object created to own the ``DLManagerTensor`` obtained
-from the capsule. Below is an example of the capsule deleter written in the
-Python C API which is called either when the refcount on the capsule named
+The consumer must transfer ownership of the ``DLManangedTensorVersioned``
+or ``DLManangedTensor`` from the capsule to its own object. It does so
+by renaming the capsule to ``"used_dltensor"`` to ensure that
+``PyCapsule_Destructor`` will not get called (ensured if
+``PyCapsule_Destructor`` calls ``deleter`` only for capsules whose name
+is ``"dltensor"`` or ``"versioned_dltensor"``), but the ``deleter`` of
+the ``DLManagedTensor`` will be called by the destructor of the consumer
+library object created to own the ``DLManagerTensor`` obtained from the
+capsule. Below is an example of the capsule deleter written in the Python
+C API which is called either when the refcount on the capsule named
 ``"dltensor"`` reaches zero or the consumer decides to deallocate its array:
 
 .. code-block:: C
@@ -120,14 +132,14 @@ Python C API which is called either when the refcount on the capsule named
 Note: the capsule names ``"dltensor"`` and ``"used_dltensor"`` must be
 statically allocated.
 
-When the ``strides`` field in the ``DLTensor`` struct is ``NULL``, it indicates a
-row-major compact array. If the array is of size zero, the data pointer in
-``DLTensor`` should be set to either ``NULL`` or ``0``.
+When the ``strides`` field in the ``DLTensorVersioned`` struct is ``NULL``,
+it indicates a row-major compact array. If the array is of size zero, the
+data pointer in ``DLTensorVersioned`` should be set to either ``NULL`` or
+``0``.
 
 For further details on DLPack design and how to implement support for it,
-refer to https://github.com/dmlc/dlpack. For details on ABI compatibility,
-refer to :ref:`future-abi-compat`. To upgrade to the new ABI (version 2),
-refer to :ref:`upgrade-policy`.
+refer to https://github.com/dmlc/dlpack. For details on ABI compatibility
+and to upgrade to the new ABI (version 2), refer to :ref:`future-abi-compat`.
 
 .. warning::
    DLPack contains a ``device_id``, which will be the device
@@ -142,56 +154,42 @@ refer to :ref:`upgrade-policy`.
    whether the ``.device`` attribute of the array returned from ``from_dlpack`` is
    guaranteed to be in a certain order or not.
 
-.. _upgrade-policy:
-
-Upgrade Policy
-~~~~~~~~~~~~~~
-
-DLPack has been upgraded to ABI version 2. ABI version 1 did not contain any
-version info in the ``DLTensor`` or ``DLManagedTensor`` structs. This has been added
-now and can be used to check if the producer's ``DLManagedTensor`` is compatible with
-the consumer's ``DLManagedTensor``. This section gives a path for Python libraries
-to upgrade to the new ABI (while preserving support for the old ABI):
-
-* ``__dlpack__`` should accept a ``version`` keyword (a Python tuple
-  ``(dlpack_version, dlpack_abi_version)``) which is set to ``None`` by default.
-  Consumers can use this kwarg to request certain versions of DLPack. If
-  ``version=None`` or the ABI version 1 is requested:
-
-  * a capsule named ``"dltensor"`` which uses the old ABI should be returned
-    (if the producer wants to keep supporting it) or
-  * a ``BufferError`` should be raised (if the producer doesn't want to keep
-    support for the old ABI)
-
-  Otherwise, a capsule named ``"versioned_dltensor"`` should be returned which
-  uses the new ABI. If the requested version is not supported, ``__dlpack__``
-  should raise a ``BufferError``.
-* Consumers should pass a ``version`` keyword to the ``__dlpack__`` and
-  ``__dlpack_device__`` methods requesting for a particular DLPack version and
-  DLPack ABI version.
-* If the ``__dlpack__`` method doesn't accept the ``version`` kwarg, the
-  consumer should fallback to the old API i.e. passing no arguments to
-  ``__dlpack__``. The consumers can check the capsule name: if a ``"dltensor"``
-  capsule is received, the old ABI can be used to import data or if a
-  ``"versioned_dltensor"`` is received, the version in the ``DLTensor`` struct
-  can be used to check for compatibility.
-
-
 .. _future-abi-compat:
 
 Future ABI Compatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-DLPack now contains a ``DLPACK_VERSION`` and ``DLPACK_ABI_VERSION`` macro that defines
-the current DLPack and ABI version respectively. Since DLPack ABI version 2,
-``DLTensor`` contains a ``version`` field with ``dlpack`` and ``abi`` version fields
-which can be used by the consumers to check for compatibility. In case of an ABI
-break in the future, the consumers can request the ``__dlpack__`` method to
-return a capsule compatible with a particular DLPack and ABI version by passing
-a ``version`` keyword. ``version`` should be a tuple where the first element is
-the requested DLPack version and the second element is the requested ABI version.
-If the producer doesn't support the given versions, it should raise a
-``BufferError``.
+ABI version 1 did not contain any version info in the ``DLTensor`` or
+``DLManagedTensor`` structs. Two equivalent structs, ``DLTensorVersioned`` and
+``DLManagedTensorVersioned``, have been added since ABI version 2 (DLPack version
+0.7.0) and can be used to check if the producer's DLPack version is compatible
+with the consumer's DLPack version. This section gives a path for Python
+libraries to upgrade to the new ABI (while preserving support for the old ABI):
+
+* ``__dlpack__`` should accept a ``version`` (int) keyword which is set to
+  ``None`` by default. Consumers can use this kwarg to request certain DLPack
+  versions. If ``version=None`` or ``version=60`` is requested:
+
+  * a capsule named ``"dltensor"`` which uses the old ABI (``DLTensor`` and
+    ``DLManagedTensor``) should be returned (if the producer wants to keep
+    supporting it) or
+  * a ``BufferError`` should be raised (if the producer doesn't want to keep
+    support for the old ABI)
+
+  Otherwise, a capsule named ``"versioned_dltensor"`` should be returned which
+  uses the new ABI (``DLTensorVersioned`` and ``DLManagedTensorVersioned``). If
+  the requested version is not supported, ``__dlpack__`` should raise a
+  ``BufferError``.
+* Producers should implement a ``__dlpack_info__`` method that returns the
+  maximum supported DLPack version.
+* Consumers should call the ``__dlpack_info__`` method to get the maximum DLPack
+  version supported by the producer. The consumer should then request a DLPack
+  version (by passing the ``version`` kwarg to the ``__dlpack__`` method) that
+  both support e.g. ``min(producer_version, consumer_version)`` or raise a
+  ``BufferError`` if no compatible version exist. If the ``__dlpack_info__``
+  method can't be found (doesn't exist), the consumer should fallback to the old
+  API i.e. passing no version keyword to the ``__dlpack__`` method and expecting
+  a capsule named ``"dltensor"`` in return.
 
 Reference Implementations
 ~~~~~~~~~~~~~~~~~~~~~~~~~

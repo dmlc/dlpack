@@ -3,6 +3,10 @@ DLPack Change Log
 
 This file records the changes in DLPack in reverse chronological order.
 
+## v0.7
+
+TODO
+
 ## v0.4
 
 - OpaqueHandle type

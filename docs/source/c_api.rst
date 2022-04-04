@@ -33,6 +33,19 @@ Structs
 .. doxygenstruct:: DLPackVersion
    :members:
 
+.. doxygenstruct:: DLTensorVersioned
+   :members:
+
+.. doxygenstruct:: DLManagedTensorVersioned
+   :members:
+
+ABI v1 Structs
+~~~~~~~~~~~~~~
+
+DLTensor and DLManagedTensor don't contain any field to export version info.
+Since ABI version 2, structs DLTensorVersioned and DLManagedTensorVersioned
+have been added with version info and should be used instead.
+
 .. doxygenstruct:: DLTensor
    :members:
 
