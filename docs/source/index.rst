@@ -73,6 +73,7 @@ DLPack Documentation
 
    c_api
    python_spec
+   release_notes
 
 
 Indices and tables
