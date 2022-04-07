@@ -182,7 +182,8 @@ section gives a path for Python libraries to upgrade to the new ABI
   If the requested version is not supported, ``__dlpack__`` should raise a
   ``BufferError``.
 * Producers should implement a ``__dlpack_info__`` method that returns the
-  maximum supported DLPack version.
+  maximum supported DLPack version. If this method does not exist, the consumer
+  must use the old ABI.
 * Consumers should call the ``__dlpack_info__`` method to get the maximum DLPack
   version supported by the producer. The consumer should then request a DLPack
   version (by passing the ``version`` kwarg to the ``__dlpack__`` method) that
