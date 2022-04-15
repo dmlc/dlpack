@@ -16,10 +16,10 @@
 #endif
 
 /*! \brief The current version of dlpack */
-#define DLPACK_VERSION 60
+#define DLPACK_VERSION 70
 
 /*! \brief The current ABI version of dlpack */
-#define DLPACK_ABI_VERSION 1
+#define DLPACK_ABI_VERSION 2
 
 /*! \brief DLPACK_DLL prefix for windows */
 #ifdef _WIN32
@@ -222,6 +222,12 @@ typedef struct DLManagedTensor {
    *   The destructors deletes the argument self as well.
    */
   void (*deleter)(struct DLManagedTensor * self);
+  /* The version of the DLManagedTensor */
+  int32_t version;
+  /*! \brief Mark the data readonly. */
+  uint8_t readonly;
+  /*! \brief 128-bytes of padding to preserve ABI compatibility in the future. */
+  uint8_t __padding[128];
 } DLManagedTensor;
 #ifdef __cplusplus
 }  // DLPACK_EXTERN_C
