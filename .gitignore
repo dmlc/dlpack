@@ -30,3 +30,6 @@
 *~
 build
 bin
+
+# Python
+__pycache__

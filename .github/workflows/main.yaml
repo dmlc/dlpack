@@ -33,3 +33,9 @@ jobs:
     - name: Test
       run: |
         ./tests/scripts/task_build.sh
+    - name: Install Python Packages
+      run: |
+        python3 -m pip install -U pytest numpy torch tensorflow mxnet
+    - name: Python Tests
+      run: |
+        pytest -v
