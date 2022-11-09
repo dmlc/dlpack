@@ -19,7 +19,7 @@
 #define DLPACK_VERSION 80
 
 /*! \brief The current ABI version of dlpack */
-#define DLPACK_ABI_VERSION 1
+#define DLPACK_ABI_VERSION 2
 
 /*! \brief DLPACK_DLL prefix for windows */
 #ifdef _WIN32
@@ -38,6 +38,17 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/*!
+ * \brief The DLPack and DLPack ABI versions of the tensor.
+ */
+typedef struct {
+  /*! \brief DLPack version. */
+  uint32_t dlpack;
+  /*! \brief DLPack ABI version. */
+  uint32_t abi;
+} DLPackVersion;
+
 /*!
  * \brief The device type in DLDevice.
  */
@@ -89,6 +100,15 @@ typedef enum {
   kDLWebGPU = 15,
   /*! \brief Qualcomm Hexagon DSP */
   kDLHexagon = 16,
+
+  /*!
+   * \brief The end mark of DLDevice type flag.
+   * This is a helper flag to help dependent packages to check possible extensions.
+   *
+   * The dependent package should be static_assert(kExtendedFlag > kDLDeviceTypeEnd);
+   * to ensure that version update do not override existing flags.
+   */
+  kDLDeviceTypeEnd
 } DLDeviceType;
 
 /*!
@@ -211,6 +231,13 @@ typedef struct {
  *  not meant to transfer the tensor. When the borrowing framework doesn't need
  *  the tensor, it should call the deleter to notify the host that the resource
  *  is no longer needed.
+ *
+ * \note This data structure is used as Legacy DLManagedTensor
+ *       in DLPack exchange and is deprecated after DLPack v0.8
+ *       Use DLManagedTensorVersioned instead.
+ *       This data structure may get renamed or deleted in future versions.
+ *
+ * \sa DLManagedTensorVersioned
  */
 typedef struct DLManagedTensor {
   /*! \brief DLTensor which is being memory managed */
@@ -219,13 +246,66 @@ typedef struct DLManagedTensor {
    *   which DLManagedTensor is used in the framework. It can also be NULL.
    */
   void * manager_ctx;
-  /*! \brief Destructor signature void (*)(void*) - this should be called
-   *   to destruct manager_ctx which holds the DLManagedTensor. It can be NULL
-   *   if there is no way for the caller to provide a reasonable destructor.
-   *   The destructors deletes the argument self as well.
+  /*!
+   * \brief Destructor - this should be called
+   * to destruct the manager_ctx  which backs the DLManagedTensor. It can be
+   * NULL if there is no way for the caller to provide a reasonable destructor.
+   * The destructors deletes the argument self as well.
    */
   void (*deleter)(struct DLManagedTensor * self);
 } DLManagedTensor;
+
+/*!
+ * \brief The device type in DLDevice.
+ */
+#ifdef __cplusplus
+typedef enum : uint64_t {
+#else
+typedef enum {
+#endif
+  /*! \brief bit mask to indicate that the tensor is read only. */
+  kDLFlagBitMaskReadOnly = 1UL,
+} DLFlagBitMask;
+
+/*!
+ * \brief A versioned and managed C Tensor object, manage memory of DLTensor.
+ *  This data structure is intended to facilitate the borrowing of DLTensor by
+ * another framework. It is not meant to transfer the tensor. When the borrowing
+ * framework doesn't need the tensor, it should call the deleter to notify the
+ * host that the resource is no longer needed.
+ *
+ * \note This is the current standard DLPack exchange data structure.
+ */
+struct DLManagedTensorVersioned {
+  /*!
+   * \brief The API and ABI version of the current managed Tensor
+   */
+  DLPackVersion version;
+  /*!
+   * \brief the context of the original host framework of
+   * DLManagedTensorVersined in which DLManagedTensorVersioned is used in the
+   * framework. It can also be NULL.
+   */
+  void *manager_ctx;
+  /*!
+   * \brief Destructor  - this should be called
+   * to destruct manager_ctx which holds the DLManagedTensorVersioned. It can
+   * be NULL if there is no way for the caller to provide a reasonable
+   * destructor. The destructors deletes the argument self as well.
+   */
+  void (*deleter)(struct DLManagedTensorVersioned *self);
+  /*!
+   * \brief Additional bitmask flags information about the tensor.
+   *
+   * By default the flags should be set to 0.
+   *
+   * \sa DLPackFlagBitMask
+   */
+  uint64_t flags;
+  /*! \brief DLTensor which is being memory managed */
+  DLTensor dl_tensor;
+};
+
 #ifdef __cplusplus
 }  // DLPACK_EXTERN_C
 #endif

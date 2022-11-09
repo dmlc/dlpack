@@ -2,6 +2,14 @@
 #include <dlpack/dlpack.h>
 #include <dlpack/dlpackcpp.h>
 
+int CheckFlags(DLManagedTensorVersioned *data) {
+  if (data->flags & kDLFlagBitMaskReadOnly) {
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
 int main() {
   dlpack::DLTContainer c;
   return 0;
