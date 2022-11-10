@@ -126,7 +126,10 @@ typedef enum {
    * (C/C++/Python layout: compact struct per complex number)
    */
   kDLComplex = 5U,
-  /*! \brief boolean */
+  /*!
+   * \brief boolean
+   * The underlying storage size of bool is 8 bits, as per common array library convention
+   */
   kDLBool = 6U,
 } DLDataTypeCode;
 
