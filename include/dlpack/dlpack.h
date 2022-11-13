@@ -41,6 +41,12 @@ extern "C" {
 
 /*!
  * \brief The DLPack and DLPack ABI versions of the tensor.
+ *
+ * The DLPack version changes when we introduce new device type,
+ * data type that is compatible with existing ones.
+ *
+ * The DLPack ABI version changes when we change the data layout
+ * of the DLManagedTensorVersioned.
  */
 typedef struct {
   /*! \brief DLPack version. */
@@ -100,15 +106,6 @@ typedef enum {
   kDLWebGPU = 15,
   /*! \brief Qualcomm Hexagon DSP */
   kDLHexagon = 16,
-
-  /*!
-   * \brief The end mark of DLDevice type flag.
-   * This is a helper flag to help dependent packages to check possible extensions.
-   *
-   * The dependent package should be static_assert(kExtendedFlag > kDLDeviceTypeEnd);
-   * to ensure that version update do not override existing flags.
-   */
-  kDLDeviceTypeEnd
 } DLDeviceType;
 
 /*!
@@ -255,21 +252,15 @@ typedef struct DLManagedTensor {
   void (*deleter)(struct DLManagedTensor * self);
 } DLManagedTensor;
 
-/*!
- * \brief The device type in DLDevice.
- */
-#ifdef __cplusplus
-typedef enum : uint64_t {
-#else
-typedef enum {
-#endif
-  /*! \brief bit mask to indicate that the tensor is read only. */
-  kDLFlagBitMaskReadOnly = 1UL,
-} DLFlagBitMask;
+// bit masks used in in the DLManagedTensorVersioned
+
+/*! \brief bit mask to indicate that the tensor is read only. */
+#define DLPACK_FLAG_BITMASK_READ_ONLY (1UL << 0UL)
 
 /*!
  * \brief A versioned and managed C Tensor object, manage memory of DLTensor.
- *  This data structure is intended to facilitate the borrowing of DLTensor by
+ *
+ * This data structure is intended to facilitate the borrowing of DLTensor by
  * another framework. It is not meant to transfer the tensor. When the borrowing
  * framework doesn't need the tensor, it should call the deleter to notify the
  * host that the resource is no longer needed.
@@ -282,15 +273,17 @@ struct DLManagedTensorVersioned {
    */
   DLPackVersion version;
   /*!
-   * \brief the context of the original host framework of
-   * DLManagedTensorVersined in which DLManagedTensorVersioned is used in the
+   * \brief the context of the original host framework.
+   *
+   * Stores DLManagedTensorVersioned is used in the
    * framework. It can also be NULL.
    */
   void *manager_ctx;
   /*!
-   * \brief Destructor  - this should be called
-   * to destruct manager_ctx which holds the DLManagedTensorVersioned. It can
-   * be NULL if there is no way for the caller to provide a reasonable
+   * \brief Destructor.
+   *
+   * This should be called to destruct manager_ctx which holds the DLManagedTensorVersioned.
+   * It can be NULL if there is no way for the caller to provide a reasonable
    * destructor. The destructors deletes the argument self as well.
    */
   void (*deleter)(struct DLManagedTensorVersioned *self);
@@ -299,7 +292,10 @@ struct DLManagedTensorVersioned {
    *
    * By default the flags should be set to 0.
    *
-   * \sa DLPackFlagBitMask
+   * \note Future ABI changes should keep everything until this field
+   *       stable, to ensure that deleter can be correctly called.
+   *
+   * \sa DLPACK_FLAG_BITMASK_READ_ONLY
    */
   uint64_t flags;
   /*! \brief DLTensor which is being memory managed */
