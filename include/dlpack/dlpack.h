@@ -15,11 +15,11 @@
 #define DLPACK_EXTERN_C
 #endif
 
-/*! \brief The current version of dlpack */
-#define DLPACK_VERSION 80
+/*! \brief The current major version of dlpack */
+#define DLPACK_MAJOR_VERSION 1
 
-/*! \brief The current ABI version of dlpack */
-#define DLPACK_ABI_VERSION 2
+/*! \brief The current minor version of dlpack */
+#define DLPACK_MINOR_VERSION 0
 
 /*! \brief DLPACK_DLL prefix for windows */
 #ifdef _WIN32
@@ -40,19 +40,19 @@ extern "C" {
 #endif
 
 /*!
- * \brief The DLPack and DLPack ABI versions of the tensor.
+ * \brief The DLPack version.
  *
- * The DLPack version changes when we introduce new device type,
- * data type that is compatible with existing ones.
+ * A change in major version indicates that we have changed the
+ * data layout of the ABI - DLManagedTensorVersioned.
  *
- * The DLPack ABI version changes when we change the data layout
- * of the DLManagedTensorVersioned.
+ * A change in minor version indicates that we have added new
+ * code, such as a new device type, but the ABI is kept the same.
  */
 typedef struct {
-  /*! \brief DLPack version. */
-  uint32_t dlpack;
-  /*! \brief DLPack ABI version. */
-  uint32_t abi;
+  /*! \brief DLPack major version version. */
+  uint32_t major;
+  /*! \brief DLPack minor version. */
+  uint32_t minor;
 } DLPackVersion;
 
 /*!
