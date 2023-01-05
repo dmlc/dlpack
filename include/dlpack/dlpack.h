@@ -16,7 +16,7 @@
 #endif
 
 /*! \brief The current version of dlpack */
-#define DLPACK_VERSION 70
+#define DLPACK_VERSION 80
 
 /*! \brief The current ABI version of dlpack */
 #define DLPACK_ABI_VERSION 1
