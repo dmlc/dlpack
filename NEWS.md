@@ -3,6 +3,11 @@ DLPack Change Log
 
 This file records the changes in DLPack in reverse chronological order.
 
+## v0.8
+
+- Add kDLBool
+
+
 ## v0.7
 
 - Add kDLHexagon
