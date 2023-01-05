@@ -47,9 +47,19 @@ extern "C" {
  *
  * A change in minor version indicates that we have added new
  * code, such as a new device type, but the ABI is kept the same.
+ *
+ * If an obtained DLPack tensor has a major version that disagrees
+ * with the version number specified in this header file
+ * (i.e. major != DLPACK_MAJOR_VERSION), the consumer must call the deleter
+ * (and it is safe to do so). It is not safe to access any other fields
+ * as the memory layout will have changed.
+ *
+ * In the case of a minor version mismatch, the tensor can be safely used as
+ * long as the consumer knows how to interpret all fields. Minor version
+ * updates indicate the addition of enumeration values.
  */
 typedef struct {
-  /*! \brief DLPack major version version. */
+  /*! \brief DLPack major version. */
   uint32_t major;
   /*! \brief DLPack minor version. */
   uint32_t minor;
