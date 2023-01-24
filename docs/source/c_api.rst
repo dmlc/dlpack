@@ -8,7 +8,9 @@ Macros
 
 .. doxygendefine:: DLPACK_EXTERN_C
 
-.. doxygendefine:: DLPACK_VERSION
+.. doxygendefine:: DLPACK_MAJOR_VERSION
+
+.. doxygendefine:: DLPACK_MINOR_VERSION
 
 .. doxygendefine:: DLPACK_DLL
 
@@ -22,6 +24,9 @@ Enumerations
 Structs
 ~~~~~~~
 
+.. doxygenstruct:: DLPackVersion
+   :members:
+
 .. doxygenstruct:: DLDevice
    :members:
 
@@ -32,4 +37,7 @@ Structs
    :members:
 
 .. doxygenstruct:: DLManagedTensor
+   :members:
+
+.. doxygenstruct:: DLManagedTensorVersioned
    :members:
