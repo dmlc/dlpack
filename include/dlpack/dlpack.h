@@ -116,6 +116,8 @@ typedef enum {
   kDLWebGPU = 15,
   /*! \brief Qualcomm Hexagon DSP */
   kDLHexagon = 16,
+  /*! \brief Device abstract for onnxruntime (ORT) */
+  kDLOrt = 17,
 } DLDeviceType;
 
 /*!

@@ -18,6 +18,7 @@ class DLDeviceType(ctypes.c_int):
     kDLROCMHost = 11
     kDLCUDAManaged = 13
     kDLOneAPI = 14
+    kDLOrt = 17
 
     def __str__(self):
         return {
@@ -32,6 +33,7 @@ class DLDeviceType(ctypes.c_int):
             self.kDLROCMHost: "ROMCHost",
             self.kDLCUDAManaged: "CUDAManaged",
             self.kDLOneAPI: "oneAPI",
+            self.kDLOrt: "Ort",
             }[self.value]
 
 
