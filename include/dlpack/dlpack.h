@@ -215,6 +215,9 @@ typedef struct {
    *   return size;
    * }
    * \endcode
+   *
+   * Note that if the tensor is of size zero, then the data pointer should be
+   * set to `NULL`.
    */
   void* data;
   /*! \brief The device of the tensor */
