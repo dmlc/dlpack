@@ -116,8 +116,8 @@ typedef enum {
   kDLWebGPU = 15,
   /*! \brief Qualcomm Hexagon DSP */
   kDLHexagon = 16,
-  /*! \brief Microsoft NPU */
-  kDLMsNpu = 17,
+  /*! \brief Microsoft MAIA devices */
+  kDLMAIA = 17,
 } DLDeviceType;
 
 /*!
