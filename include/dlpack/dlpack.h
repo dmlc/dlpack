@@ -272,6 +272,9 @@ typedef struct DLManagedTensor {
 /*! \brief bit mask to indicate that the tensor is read only. */
 #define DLPACK_FLAG_BITMASK_READ_ONLY (1UL << 0UL)
 
+/*! \brief bit mask to indicate that the tensor is a copy made by the producer. */
+#define DLPACK_FLAG_BITMASK_IS_COPIED (1UL << 1UL)
+
 /*!
  * \brief A versioned and managed C Tensor object, manage memory of DLTensor.
  *
@@ -311,6 +314,7 @@ struct DLManagedTensorVersioned {
    *       stable, to ensure that deleter can be correctly called.
    *
    * \sa DLPACK_FLAG_BITMASK_READ_ONLY
+   * \sa DLPACK_FLAG_BITMASK_IS_COPIED
    */
   uint64_t flags;
   /*! \brief DLTensor which is being memory managed */

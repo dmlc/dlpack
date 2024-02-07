@@ -14,6 +14,10 @@ Macros
 
 .. doxygendefine:: DLPACK_DLL
 
+.. doxygendefine:: DLPACK_FLAG_BITMASK_READ_ONLY
+
+.. doxygendefine:: DLPACK_FLAG_BITMASK_IS_COPIED
+
 Enumerations
 ~~~~~~~~~~~~
 

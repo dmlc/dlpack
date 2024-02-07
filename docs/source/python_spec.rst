@@ -13,10 +13,10 @@ Syntax for data interchange with DLPack
 
 The array API will offer the following syntax for data interchange:
 
-1. A ``from_dlpack(x)`` function, which accepts (array) objects with a
-   ``__dlpack__`` method and uses that method to construct a new array
-   containing the data from ``x``.
-2. ``__dlpack__(self, stream=None)`` and ``__dlpack_device__`` methods on the
+1. A ``from_dlpack(x, ...)`` function, which accepts any (array) object with
+   the two DLPack methods implemented (see below) and uses them to construct
+   a new array containing the data from ``x``.
+2. ``__dlpack__`` and ``__dlpack_device__`` methods on the
    array object, which will be called from within ``from_dlpack``, to query
    what device the array is on (may be needed to pass in the correct
    stream, e.g. in the case of multiple GPUs) and to access the data.
@@ -25,21 +25,22 @@ The array API will offer the following syntax for data interchange:
 Semantics
 ~~~~~~~~~
 
-DLPack describes the memory layout of strided, n-dimensional arrays.
+DLPack describes the memory layout of dense, strided, n-dimensional arrays.
 When a user calls ``y = from_dlpack(x)``, the library implementing ``x`` (the
 "producer") will provide access to the data from ``x`` to the library
 containing ``from_dlpack`` (the "consumer"). If possible, this must be
 zero-copy (i.e. ``y`` will be a *view* on ``x``). If not possible, that library
 may make a copy of the data. In both cases:
 
-- The producer keeps owning the memory
+- The producer keeps owning the memory of ``x`` (and ``y`` if a copy is made)
 - ``y`` may or may not be a view, therefore the user must keep the recommendation to
   avoid mutating ``y`` in mind - see :ref:`copyview-mutability`.
 - Both ``x`` and ``y`` may continue to be used just like arrays created in other ways.
 
-If an array that is accessed via the interchange protocol lives on a
-device that the requesting library does not support, it is recommended to
-raise a ``TypeError``.
+If an array that is accessed via the interchange protocol lives on a device that
+the requesting (consumer) library does not support, it is recommended to raise a
+``BufferError``, unless an explicit copy is requested (see below) and the producer
+can support the request.
 
 Stream handling through the ``stream`` keyword applies to CUDA and ROCm (perhaps
 to other devices that have a stream concept as well, however those haven't been
@@ -48,6 +49,11 @@ producer; the producer must synchronize or wait on the stream when necessary.
 In the common case of the default stream being used, synchronization will be
 unnecessary so asynchronous execution is enabled.
 
+Starting Python array API standard v2023, a copy can be explicitly requested (or
+disabled) through the new ``copy`` argument of ``from_dlpack()``. When a copy is
+made, the producer should set the ``DLPACK_FLAG_BITMASK_IS_COPIED`` bit flag.
+It is also possible to request cross-device copies through the new ``device``
+argument, though the v2023 standard only mandates the support of ``kDLCPU``.
 
 Implementation
 ~~~~~~~~~~~~~~
@@ -64,6 +70,19 @@ implementers on, e.g., memory management.*
 struct members, gray text enum values of supported devices and data
 types.*
 
+Starting Python array API standard v2023, a new ``max_version`` argument
+is added to ``__dlpack__`` for the consumer to signal the producer the
+maximal supported DLPack version. Starting DLPack 1.0, the ``DLManagedTensorVersioned``
+struct should be used and the existing ``DLManagedTensor`` struct is considered
+deprecated, though a library should try to support both during the transition
+period if possible.
+
+In the rest of this document, ``DLManagedTensorVersioned`` and ``DLManagedTensor``
+are treated as synonyms, assuming a proper handling of ``max_version`` has been
+done to choose the right struct. As far as the capsule name is concerned,
+when ``DLManagedTensorVersioned`` is in use the capsule names ``dltensor``
+and ``used_dltensor`` will need a ``_versioned`` suffix.
+
 The ``__dlpack__`` method will produce a ``PyCapsule`` containing a
 ``DLManagedTensor``, which will be consumed immediately within
 ``from_dlpack`` - therefore it is consumed exactly once, and it will not be
@@ -74,13 +93,13 @@ it can be inspected by name, and set ``PyCapsule_Destructor`` that calls
 the ``deleter`` of the ``DLManagedTensor`` when the ``"dltensor"``-named
 capsule is no longer needed.
 
-The consumer must transer ownership of the ``DLManangedTensor`` from the
+The consumer must transer ownership of the ``DLManagedTensor`` from the
 capsule to its own object. It does so by renaming the capsule to
 ``"used_dltensor"`` to ensure that ``PyCapsule_Destructor`` will not get
 called (ensured if ``PyCapsule_Destructor`` calls ``deleter`` only for
 capsules whose name is ``"dltensor"``), but the ``deleter`` of the
 ``DLManagedTensor`` will be called by the destructor of the consumer
-library object created to own the ``DLManagerTensor`` obtained from the
+library object created to own the ``DLManagedTensor`` obtained from the
 capsule. Below is an example of the capsule deleter written in the Python
 C API which is called either when the refcount on the capsule named
 ``"dltensor"`` reaches zero or the consumer decides to deallocate its array:
@@ -119,8 +138,7 @@ When the ``strides`` field in the ``DLTensor`` struct is ``NULL``, it indicates 
 row-major compact array. If the array is of size zero, the data pointer in
 ``DLTensor`` should be set to either ``NULL`` or ``0``.
 
-DLPack version used must be ``0.2 <= DLPACK_VERSION < 1.0``. For further
-details on DLPack design and how to implement support for it,
+For further details on DLPack design and how to implement support for it,
 refer to `github.com/dmlc/dlpack <https://github.com/dmlc/dlpack>`_.
 
 .. warning::
