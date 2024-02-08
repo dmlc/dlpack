@@ -30,7 +30,7 @@ When a user calls ``y = from_dlpack(x)``, the library implementing ``x`` (the
 "producer") will provide access to the data from ``x`` to the library
 containing ``from_dlpack`` (the "consumer"). If possible, this must be
 zero-copy (i.e. ``y`` will be a *view* on ``x``). If not possible, that library
-may make a copy of the data. In both cases:
+may flag this and make a copy of the data. In both cases:
 
 - The producer keeps owning the memory of ``x`` (and ``y`` if a copy is made)
 - ``y`` may or may not be a view, therefore the user must keep the recommendation to
@@ -51,7 +51,7 @@ unnecessary so asynchronous execution is enabled.
 
 Starting Python array API standard v2023, a copy can be explicitly requested (or
 disabled) through the new ``copy`` argument of ``from_dlpack()``. When a copy is
-made, the producer should set the ``DLPACK_FLAG_BITMASK_IS_COPIED`` bit flag.
+made, the producer must set the ``DLPACK_FLAG_BITMASK_IS_COPIED`` bit flag.
 It is also possible to request cross-device copies through the new ``device``
 argument, though the v2023 standard only mandates the support of ``kDLCPU``.
 
