@@ -262,7 +262,7 @@ typedef struct DLManagedTensor {
    * \brief Destructor - this should be called
    * to destruct the manager_ctx  which backs the DLManagedTensor. It can be
    * NULL if there is no way for the caller to provide a reasonable destructor.
-   * The destructors deletes the argument self as well.
+   * The destructor deletes the argument self as well.
    */
   void (*deleter)(struct DLManagedTensor * self);
 } DLManagedTensor;
@@ -271,6 +271,14 @@ typedef struct DLManagedTensor {
 
 /*! \brief bit mask to indicate that the tensor is read only. */
 #define DLPACK_FLAG_BITMASK_READ_ONLY (1UL << 0UL)
+
+/*!
+ * \brief bit mask to indicate that the tensor is a copy made by the producer.
+ *
+ * If set, the tensor is considered solely owned throughout its lifetime by the
+ * consumer, until the producer-provided deleter is invoked.
+ */
+#define DLPACK_FLAG_BITMASK_IS_COPIED (1UL << 1UL)
 
 /*!
  * \brief A versioned and managed C Tensor object, manage memory of DLTensor.
@@ -299,7 +307,7 @@ struct DLManagedTensorVersioned {
    *
    * This should be called to destruct manager_ctx which holds the DLManagedTensorVersioned.
    * It can be NULL if there is no way for the caller to provide a reasonable
-   * destructor. The destructors deletes the argument self as well.
+   * destructor. The destructor deletes the argument self as well.
    */
   void (*deleter)(struct DLManagedTensorVersioned *self);
   /*!
@@ -311,6 +319,7 @@ struct DLManagedTensorVersioned {
    *       stable, to ensure that deleter can be correctly called.
    *
    * \sa DLPACK_FLAG_BITMASK_READ_ONLY
+   * \sa DLPACK_FLAG_BITMASK_IS_COPIED
    */
   uint64_t flags;
   /*! \brief DLTensor which is being memory managed */
