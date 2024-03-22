@@ -134,6 +134,38 @@ C API which is called either when the refcount on the capsule named
 Note: the capsule names ``"dltensor"`` and ``"used_dltensor"`` must be
 statically allocated.
 
+The ``DLManagedTensor`` deleter must ensure that sharing beyond Python
+boundaries is possible, this means that the GIL must be acquired explicitly
+if it uses Python objects or API.
+In Python, the deleter usually needs to ``Py_DECREF()`` the original owner
+and free the ``DLManagedTensor`` allocation.
+For example, NumPy uses the following code to ensure sharing with arbitrary
+non-Python code is safe:
+
+.. code-block:: C
+
+   static void array_dlpack_deleter(DLManagedTensor *self)
+   {
+      /*
+       * Leak the Python object if the Python runtime is not available.
+       * This can happen if the DLPack consumer destroys the tensor late
+       * after Python runtime finalization (for example in case the tensor
+       * was indirectly kept alive by a C++ static variable).
+       */
+      if (!Py_IsInitialized()) {
+         return;
+      }
+
+      PyGILState_STATE state = PyGILState_Ensure();
+
+      PyObject *array = (PyObject *)self->manager_ctx;
+      // This will also free the shape and strides as it's one allocation.
+      PyMem_Free(self);
+      Py_XDECREF(array);
+
+      PyGILState_Release(state);
+   }
+
 When the ``strides`` field in the ``DLTensor`` struct is ``NULL``, it indicates a
 row-major compact array. If the array is of size zero, the data pointer in
 ``DLTensor`` should be set to either ``NULL`` or ``0``.
