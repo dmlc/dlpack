@@ -108,27 +108,18 @@ C API which is called either when the refcount on the capsule named
 
    static void dlpack_capsule_deleter(PyObject *self){
       if (PyCapsule_IsValid(self, "used_dltensor")) {
-         return; /* Do nothing if the capsule has been consumed. */
+         return;  /* Do nothing if the capsule has been consumed. */
       }
-
-      /* an exception may be in-flight, we must save it in case we create another one */
-      PyObject *type, *value, *traceback;
-      PyErr_Fetch(&type, &value, &traceback);
 
       DLManagedTensor *managed = (DLManagedTensor *)PyCapsule_GetPointer(self, "dltensor");
       if (managed == NULL) {
          PyErr_WriteUnraisable(self);
-         goto done;
+         return;
       }
       /* the spec says the deleter can be NULL if there is no way for the caller to provide a reasonable destructor. */
       if (managed->deleter) {
          managed->deleter(managed);
-         /* TODO: is the deleter allowed to set a python exception? */
-         assert(!PyErr_Occurred());
       }
-
-   done:
-      PyErr_Restore(type, value, traceback);
    }
 
 Note: the capsule names ``"dltensor"`` and ``"used_dltensor"`` must be
