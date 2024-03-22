@@ -135,7 +135,8 @@ Note: the capsule names ``"dltensor"`` and ``"used_dltensor"`` must be
 statically allocated.
 
 The ``DLManagedTensor`` deleter must ensure that sharing beyond Python
-boundaries is possible, this means that the GIL must be acquired explicitly.
+boundaries is possible, this means that the GIL must be acquired explicitly
+if it uses Python objects or API.
 In Python, the deleter usually needs to ``Py_DECREF()`` the original owner
 and free the ``DLManagedTensor`` allocation.
 For example, NumPy uses the following code to ensure sharing with arbitrary
