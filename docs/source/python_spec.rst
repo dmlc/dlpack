@@ -135,20 +135,20 @@ Note: the capsule names ``"dltensor"`` and ``"used_dltensor"`` must be
 statically allocated.
 
 The ``DLManagedTensor`` deleter must ensure that sharing beyond Python
-boundaries is possible, this means that the GIL must be held.
+boundaries is possible, this means that the GIL must be acquired explicitly.
 In Python, the deleter usually needs to ``Py_DECREF()`` the original owner
 and free the ``DLManagedTensor`` allocation.
 For example, NumPy uses the following code to ensure sharing with arbitrary
-C++ is safe:
+non-Python code is safe:
 
 .. code-block:: C
    static void array_dlpack_deleter(DLManagedTensor *self)
    {
       /*
-       * Leak the pyobj if not initialized.  This can happen if we are running
-       * exit handlers that are destructing c++ objects with residual (owned)
-       * PyObjects stored in them after the Python runtime has already been
-       * terminated.
+       * Leak the Python object if the Python runtime is not available.
+       * This can happen if the DLPack consumer destroys the tensor late
+       * after Python runtime finalization (for example in case the tensor
+       * was indirectly kept alive by a C++ static variable).
        */
       if (!Py_IsInitialized()) {
          return;
