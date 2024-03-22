@@ -142,6 +142,7 @@ For example, NumPy uses the following code to ensure sharing with arbitrary
 non-Python code is safe:
 
 .. code-block:: C
+
    static void array_dlpack_deleter(DLManagedTensor *self)
    {
       /*
