@@ -13,11 +13,11 @@ Syntax for data interchange with DLPack
 
 The array API will offer the following syntax for data interchange:
 
-1. A ``from_dlpack(x, ...)`` function, which accepts any (array) object with
+1. A :func:`~array_api.from_dlpack` function, which accepts any (array) object with
    the two DLPack methods implemented (see below) and uses them to construct
-   a new array containing the data from ``x``.
-2. ``__dlpack__`` and ``__dlpack_device__`` methods on the
-   array object, which will be called from within ``from_dlpack``, to query
+   a new array containing the data from the input array.
+2. :meth:`~array_api.array.__dlpack__` and :meth:`~array_api.array.__dlpack_device__` methods on the
+   array object, which will be called from within :func:`~array_api.from_dlpack`, to query
    what device the array is on (may be needed to pass in the correct
    stream, e.g. in the case of multiple GPUs) and to access the data.
 
@@ -39,7 +39,7 @@ may flag this and make a copy of the data. In both cases:
 
 If an array that is accessed via the interchange protocol lives on a device that
 the requesting (consumer) library does not support, it is recommended to raise a
-``BufferError``, unless an explicit copy is requested (see below) and the producer
+:obj:`BufferError`, unless an explicit copy is requested (see below) and the producer
 can support the request.
 
 Stream handling through the ``stream`` keyword applies to CUDA and ROCm (perhaps
@@ -51,9 +51,9 @@ unnecessary so asynchronous execution is enabled.
 
 Starting Python array API standard v2023, a copy can be explicitly requested (or
 disabled) through the new ``copy`` argument of ``from_dlpack()``. When a copy is
-made, the producer must set the ``DLPACK_FLAG_BITMASK_IS_COPIED`` bit flag.
+made, the producer must set the :c:macro:`DLPACK_FLAG_BITMASK_IS_COPIED` bit flag.
 It is also possible to request cross-device copies through the new ``device``
-argument, though the v2023 standard only mandates the support of ``kDLCPU``.
+argument, though the v2023 standard only mandates the support of :c:enumerator:`kDLCPU`.
 
 Implementation
 ~~~~~~~~~~~~~~
@@ -72,24 +72,25 @@ types.*
 
 Starting Python array API standard v2023, a new ``max_version`` argument
 is added to ``__dlpack__`` for the consumer to signal the producer the
-maximal supported DLPack version. Starting DLPack 1.0, the ``DLManagedTensorVersioned``
-struct should be used and the existing ``DLManagedTensor`` struct is considered
+maximal supported DLPack version. Starting DLPack 1.0, the :c:struct:`DLManagedTensorVersioned`
+struct should be used and the existing :c:struct:`DLManagedTensor` struct is considered
 deprecated, though a library should try to support both during the transition
 period if possible.
 
-In the rest of this document, ``DLManagedTensorVersioned`` and ``DLManagedTensor``
-are treated as synonyms, assuming a proper handling of ``max_version`` has been
-done to choose the right struct. As far as the capsule name is concerned,
-when ``DLManagedTensorVersioned`` is in use the capsule names ``dltensor``
-and ``used_dltensor`` will need a ``_versioned`` suffix.
+.. note::
+    In the rest of this document, ``DLManagedTensorVersioned`` and ``DLManagedTensor``
+    are treated as synonyms, assuming a proper handling of ``max_version`` has been
+    done to choose the right struct. As far as the capsule name is concerned,
+    when ``DLManagedTensorVersioned`` is in use the capsule names ``dltensor``
+    and ``used_dltensor`` will need a ``_versioned`` suffix.
 
-The ``__dlpack__`` method will produce a ``PyCapsule`` containing a
+The ``__dlpack__`` method will produce a :c:type:`PyCapsule` containing a
 ``DLManagedTensor``, which will be consumed immediately within
 ``from_dlpack`` - therefore it is consumed exactly once, and it will not be
 visible to users of the Python API.
 
 The producer must set the ``PyCapsule`` name to ``"dltensor"`` so that
-it can be inspected by name, and set ``PyCapsule_Destructor`` that calls
+it can be inspected by name, and set :c:type:`PyCapsule_Destructor` that calls
 the ``deleter`` of the ``DLManagedTensor`` when the ``"dltensor"``-named
 capsule is no longer needed.
 
@@ -128,7 +129,7 @@ statically allocated.
 The ``DLManagedTensor`` deleter must ensure that sharing beyond Python
 boundaries is possible, this means that the GIL must be acquired explicitly
 if it uses Python objects or API.
-In Python, the deleter usually needs to ``Py_DECREF()`` the original owner
+In Python, the deleter usually needs to :c:func:`Py_DECREF` the original owner
 and free the ``DLManagedTensor`` allocation.
 For example, NumPy uses the following code to ensure sharing with arbitrary
 non-Python code is safe:
@@ -157,7 +158,7 @@ non-Python code is safe:
       PyGILState_Release(state);
    }
 
-When the ``strides`` field in the ``DLTensor`` struct is ``NULL``, it indicates a
+When the :c:member:`~DLTensor.strides` field in the :c:struct:`DLTensor` struct is ``NULL``, it indicates a
 row-major compact array. If the array is of size zero, the data pointer in
 ``DLTensor`` should be set to either ``NULL`` or ``0``.
 
@@ -165,7 +166,7 @@ For further details on DLPack design and how to implement support for it,
 refer to `github.com/dmlc/dlpack <https://github.com/dmlc/dlpack>`_.
 
 .. warning::
-   DLPack contains a ``device_id``, which will be the device
+   DLPack contains a :c:member:`~DLDevice.device_id`, which will be the device
    ID (an integer, ``0, 1, ...``) which the producer library uses. In
    practice this will likely be the same numbering as that of the
    consumer, however that is not guaranteed. Depending on the hardware
@@ -174,7 +175,7 @@ refer to `github.com/dmlc/dlpack <https://github.com/dmlc/dlpack>`_.
    possible for example for CUDA device pointers.
 
    It is recommended that implementers of this array API consider and document
-   whether the ``.device`` attribute of the array returned from ``from_dlpack`` is
+   whether the :attr:`~array_api.array.device` attribute of the array returned from ``from_dlpack`` is
    guaranteed to be in a certain order or not.
 
 
