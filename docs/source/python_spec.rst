@@ -185,7 +185,7 @@ Reference Implementations
 Several Python libraries have adopted this standard using Python C API, C++, Cython,
 ctypes, cffi, etc:
 
-* NumPy: `Python C API <https://github.com/numpy/numpy/blob/main/numpy/core/src/multiarray/dlpack.c>`__
+* NumPy: `Python C API <https://github.com/numpy/numpy/blob/main/numpy/_core/src/multiarray/dlpack.c>`__
 * CuPy: `Cython <https://github.com/cupy/cupy/blob/master/cupy/_core/dlpack.pyx>`__
 * Tensorflow: `C++ <https://github.com/tensorflow/tensorflow/blob/master/tensorflow/c/eager/dlpack.cc>`__,
   `Python wrapper using Python C API <https://github.com/tensorflow/tensorflow/blob/a97b01a4ff009ed84a571c138837130a311e74a7/tensorflow/python/tfe_wrapper.cc#L1562>`__,
