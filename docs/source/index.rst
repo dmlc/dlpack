@@ -24,6 +24,7 @@ developers. Highlights include:
   * `MXNet <https://mxnet.apache.org/versions/master/api/python/docs/_modules/mxnet/dlpack.html>`_
   * `TVM <https://tvm.apache.org/docs/reference/api/python/contrib.html#module-tvm.contrib.dlpack>`_
   * `mpi4py <https://mpi4py.readthedocs.io/en/stable/overview.html#support-for-gpu-aware-mpi>`_
+  * `Paddle <https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/api/paddle/utils/dlpack/from_dlpack_cn.html>`_
 
 * Clean C ABI compatible.
 
