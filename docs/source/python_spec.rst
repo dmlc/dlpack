@@ -196,3 +196,4 @@ ctypes, cffi, etc:
 * TVM: `ctypes <https://github.com/apache/tvm/blob/main/python/tvm/_ffi/_ctypes/ndarray.py>`__,
   `Cython <https://github.com/apache/tvm/blob/main/python/tvm/_ffi/_cython/ndarray.pxi>`__
 * mpi4py: `Cython <https://github.com/mpi4py/mpi4py/blob/master/src/mpi4py/MPI/asdlpack.pxi>`_
+* Paddle: `C++ <https://github.com/PaddlePaddle/Paddle/blob/develop/paddle/fluid/framework/tensor_util.cc#L901-L951>`__, `Python wrapper using Python C API <https://github.com/PaddlePaddle/Paddle/blob/develop/paddle/fluid/pybind/pybind.cc#L1263-L1280>`__
