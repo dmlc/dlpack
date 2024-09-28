@@ -1,0 +1,674 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>C API (dlpack.h) &#8212; DLPack 0.6.0 documentation</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/blank.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Python Specification for DLPack" href="python_spec.html" />
+    <link rel="prev" title="Welcome to DLPack’s documentation!" href="index.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="index.html">
+<p class="title">DLPack</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
+  C API (
+  <code class="docutils literal notranslate">
+   <span class="pre">
+    dlpack.h
+   </span>
+  </code>
+  )
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="python_spec.html">
+  Python Specification for DLPack
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/dmlc/dlpack" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#macros">
+   Macros
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#enumerations">
+   Enumerations
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#structs">
+   Structs
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+
+<div class="tocsection editthispage">
+    <a href="https://github.com/dmlc/dlpack/edit/main/docs/source/c_api.rst">
+        <i class="fas fa-pencil-alt"></i> Edit this page
+    </a>
+</div>
+
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="c-api-dlpack-h">
+<span id="c-api"></span><h1>C API (<code class="docutils literal notranslate"><span class="pre">dlpack.h</span></code>)<a class="headerlink" href="#c-api-dlpack-h" title="Permalink to this heading">¶</a></h1>
+<section id="macros">
+<h2>Macros<a class="headerlink" href="#macros" title="Permalink to this heading">¶</a></h2>
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.DLPACK_EXTERN_C">
+<span class="target" id="dlpack_8h_1a673d5372271f4182a2fb5315c2e335b4"></span><span class="sig-name descname"><span class="n"><span class="pre">DLPACK_EXTERN_C</span></span></span><a class="headerlink" href="#c.DLPACK_EXTERN_C" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compatibility with C++. </p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.DLPACK_MAJOR_VERSION">
+<span class="target" id="dlpack_8h_1a609102b9e9cbcd85d3e9c29b4f2de9db"></span><span class="sig-name descname"><span class="n"><span class="pre">DLPACK_MAJOR_VERSION</span></span></span><a class="headerlink" href="#c.DLPACK_MAJOR_VERSION" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The current major version of dlpack. </p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.DLPACK_MINOR_VERSION">
+<span class="target" id="dlpack_8h_1a8f1a2da9cbd8cf2816d4b86c4d7f0f24"></span><span class="sig-name descname"><span class="n"><span class="pre">DLPACK_MINOR_VERSION</span></span></span><a class="headerlink" href="#c.DLPACK_MINOR_VERSION" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The current minor version of dlpack. </p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.DLPACK_DLL">
+<span class="target" id="dlpack_8h_1ad57157a7cb94036d48d0444fd14ab6cf"></span><span class="sig-name descname"><span class="n"><span class="pre">DLPACK_DLL</span></span></span><a class="headerlink" href="#c.DLPACK_DLL" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>DLPACK_DLL prefix for windows. </p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.DLPACK_FLAG_BITMASK_READ_ONLY">
+<span class="target" id="dlpack_8h_1a74a92911681dd478c419099b7a0ae5d4"></span><span class="sig-name descname"><span class="n"><span class="pre">DLPACK_FLAG_BITMASK_READ_ONLY</span></span></span><a class="headerlink" href="#c.DLPACK_FLAG_BITMASK_READ_ONLY" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>bit mask to indicate that the tensor is read only. </p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.DLPACK_FLAG_BITMASK_IS_COPIED">
+<span class="target" id="dlpack_8h_1a8e4cc0613b32c4d4fd2d1560f41412ea"></span><span class="sig-name descname"><span class="n"><span class="pre">DLPACK_FLAG_BITMASK_IS_COPIED</span></span></span><a class="headerlink" href="#c.DLPACK_FLAG_BITMASK_IS_COPIED" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>bit mask to indicate that the tensor is a copy made by the producer. </p>
+<p>If set, the tensor is considered solely owned throughout its lifetime by the consumer, until the producer-provided deleter is invoked. </p>
+</dd></dl>
+
+</section>
+<section id="enumerations">
+<h2>Enumerations<a class="headerlink" href="#enumerations" title="Permalink to this heading">¶</a></h2>
+<dl class="c enum">
+<dt class="sig sig-object c" id="c.DLDeviceType">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DLDeviceType</span></span></span><a class="headerlink" href="#c.DLDeviceType" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The device type in <a class="reference internal" href="#structDLDevice"><span class="std std-ref">DLDevice</span></a>. </p>
+<p><em>Values:</em></p>
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLCPU">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573ab736fabc9e37c2acf3b09b88fdc65c9e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLCPU</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLCPU" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>CPU device. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLCUDA">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573a4468b75cfc38e153206f4b6a2167a543"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLCUDA</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLCUDA" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>CUDA GPU device. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLCUDAHost">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573a48f80c88f74bb10a057c6d36446adb46"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLCUDAHost</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLCUDAHost" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Pinned CUDA CPU memory by cudaMallocHost. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLOpenCL">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573a71b2f851779936d824bf2c235ed94a8d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLOpenCL</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLOpenCL" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>OpenCL devices. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLVulkan">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573a31aefcffd60630580d74bf055c2c3ba0"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLVulkan</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLVulkan" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Vulkan buffer for next generation graphics. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLMetal">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573a36ced4bf0304d68b5c633ddba5633e66"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLMetal</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLMetal" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Metal for Apple GPU. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLVPI">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573af063bf37ea24c1839d3a78703c2468e7"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLVPI</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLVPI" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Verilog simulator buffer. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLROCM">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573adeeb5e6f50f4309676e49f7a12512171"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLROCM</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLROCM" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>ROCm GPUs for AMD GPUs. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLROCMHost">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573a88c11300e9c35b53661c83479f5fb51c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLROCMHost</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLROCMHost" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Pinned ROCm CPU memory allocated by hipMallocHost. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLExtDev">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573aea5cdddfa3ac11130048ad8e2a012363"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLExtDev</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLExtDev" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Reserved extension device type, used for quickly test extension device The semantics can differ depending on the implementation. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLCUDAManaged">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573a3aad819a783a24e7c84c13a3e03cf99d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLCUDAManaged</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLCUDAManaged" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>CUDA managed/unified memory allocated by cudaMallocManaged. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLOneAPI">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573a4e7dd98002fc937dd645dd1293575f28"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLOneAPI</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLOneAPI" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Unified shared memory allocated on a oneAPI non-partititioned device. Call to oneAPI runtime is required to determine the device type, the USM allocation type and the sycl context it is bound to. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLWebGPU">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573a54e2a159c9e3f421d9a3093bb5def358"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLWebGPU</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLWebGPU" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>GPU support for next generation WebGPU standard. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLHexagon">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573aad7f2a6159af2f349840446d850f1402"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLHexagon</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLHexagon" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Qualcomm Hexagon DSP. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDeviceType.kDLMAIA">
+<span class="target" id="dlpack_8h_1a49db572e18d84c47738fc746568fb573ad4bac61fe38765b7ee49421c5f780ffc"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLMAIA</span></span></span><a class="headerlink" href="#c.DLDeviceType.kDLMAIA" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Microsoft MAIA devices. </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="c enum">
+<dt class="sig sig-object c" id="c.DLDataTypeCode">
+<span class="target" id="dlpack_8h_1a2a5dbaa5fb67f4845a973c09a7f2ec50"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DLDataTypeCode</span></span></span><a class="headerlink" href="#c.DLDataTypeCode" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The type code options <a class="reference internal" href="#structDLDataType"><span class="std std-ref">DLDataType</span></a>. </p>
+<p><em>Values:</em></p>
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDataTypeCode.kDLInt">
+<span class="target" id="dlpack_8h_1a2a5dbaa5fb67f4845a973c09a7f2ec50a291cf38955be5c45c3aa50cea13c5e6e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLInt</span></span></span><a class="headerlink" href="#c.DLDataTypeCode.kDLInt" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>signed integer </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDataTypeCode.kDLUInt">
+<span class="target" id="dlpack_8h_1a2a5dbaa5fb67f4845a973c09a7f2ec50aa19211076c5ae99e281ea430a25b102a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLUInt</span></span></span><a class="headerlink" href="#c.DLDataTypeCode.kDLUInt" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>unsigned integer </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDataTypeCode.kDLFloat">
+<span class="target" id="dlpack_8h_1a2a5dbaa5fb67f4845a973c09a7f2ec50a8bd73646a2aa8465201b59ab7d1a83e0"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLFloat</span></span></span><a class="headerlink" href="#c.DLDataTypeCode.kDLFloat" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>IEEE floating point. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDataTypeCode.kDLOpaqueHandle">
+<span class="target" id="dlpack_8h_1a2a5dbaa5fb67f4845a973c09a7f2ec50adcbeeb07c5b8d5557e24ced65909a909"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLOpaqueHandle</span></span></span><a class="headerlink" href="#c.DLDataTypeCode.kDLOpaqueHandle" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Opaque handle type, reserved for testing purposes. Frameworks need to agree on the handle data type for the exchange to be well-defined. </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDataTypeCode.kDLBfloat">
+<span class="target" id="dlpack_8h_1a2a5dbaa5fb67f4845a973c09a7f2ec50a6a739f1b3ce2f8978da99a5ac4a887a6"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLBfloat</span></span></span><a class="headerlink" href="#c.DLDataTypeCode.kDLBfloat" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>bfloat16 </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDataTypeCode.kDLComplex">
+<span class="target" id="dlpack_8h_1a2a5dbaa5fb67f4845a973c09a7f2ec50a2e0a5562d3aa842a0830c176af8aa980"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLComplex</span></span></span><a class="headerlink" href="#c.DLDataTypeCode.kDLComplex" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>complex number (C/C++/Python layout: compact struct per complex number) </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt class="sig sig-object c" id="c.DLDataTypeCode.kDLBool">
+<span class="target" id="dlpack_8h_1a2a5dbaa5fb67f4845a973c09a7f2ec50afc4a5c980529134a136c6da5bbfac229"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kDLBool</span></span></span><a class="headerlink" href="#c.DLDataTypeCode.kDLBool" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>boolean </p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="structs">
+<h2>Structs<a class="headerlink" href="#structs" title="Permalink to this heading">¶</a></h2>
+<dl class="c struct">
+<dt class="sig sig-object c" id="c.DLPackVersion">
+<span class="target" id="structDLPackVersion"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DLPackVersion</span></span></span><a class="headerlink" href="#c.DLPackVersion" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The DLPack version. </p>
+<p>A change in major version indicates that we have changed the data layout of the ABI - <a class="reference internal" href="#structDLManagedTensorVersioned"><span class="std std-ref">DLManagedTensorVersioned</span></a>.</p>
+<p>A change in minor version indicates that we have added new code, such as a new device type, but the ABI is kept the same.</p>
+<p>If an obtained DLPack tensor has a major version that disagrees with the version number specified in this header file (i.e. major != DLPACK_MAJOR_VERSION), the consumer must call the deleter (and it is safe to do so). It is not safe to access any other fields as the memory layout will have changed.</p>
+<p>In the case of a minor version mismatch, the tensor can be safely used as long as the consumer knows how to interpret all fields. Minor version updates indicate the addition of enumeration values. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLPackVersion.major">
+<span class="target" id="structDLPackVersion_1a9505df41a649a36b8ff6ef82f2471726"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">major</span></span></span><a class="headerlink" href="#c.DLPackVersion.major" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>DLPack major version. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLPackVersion.minor">
+<span class="target" id="structDLPackVersion_1a418269e7f535ca19e87f2ea6f69442ee"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">minor</span></span></span><a class="headerlink" href="#c.DLPackVersion.minor" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>DLPack minor version. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="c struct">
+<dt class="sig sig-object c" id="c.DLDevice">
+<span class="target" id="structDLDevice"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DLDevice</span></span></span><a class="headerlink" href="#c.DLDevice" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A Device for Tensor and operator. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLDevice.device_type">
+<span class="target" id="structDLDevice_1a7c86f0ccd03a003aafb2e709ec1b46e0"></span><a class="reference internal" href="#c.DLDeviceType" title="DLDeviceType"><span class="n"><span class="pre">DLDeviceType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">device_type</span></span></span><a class="headerlink" href="#c.DLDevice.device_type" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The device type used in the device. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLDevice.device_id">
+<span class="target" id="structDLDevice_1ad44a634a3820de880f89875a8dcdd289"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">device_id</span></span></span><a class="headerlink" href="#c.DLDevice.device_id" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The device index. For vanilla CPU memory, pinned memory, or managed memory, this is set to 0. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="c struct">
+<dt class="sig sig-object c" id="c.DLDataType">
+<span class="target" id="structDLDataType"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DLDataType</span></span></span><a class="headerlink" href="#c.DLDataType" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The data type the tensor can hold. The data type is assumed to follow the native endian-ness. An explicit error message should be raised when attempting to export an array with non-native endianness. </p>
+<p>Examples<ul class="simple">
+<li><p>float: type_code = 2, bits = 32, lanes = 1</p></li>
+<li><p>float4(vectorized 4 float): type_code = 2, bits = 32, lanes = 4</p></li>
+<li><p>int8: type_code = 0, bits = 8, lanes = 1</p></li>
+<li><p>std::complex&lt;float&gt;: type_code = 5, bits = 64, lanes = 1</p></li>
+<li><p>bool: type_code = 6, bits = 8, lanes = 1 (as per common array library convention, the underlying storage size of bool is 8 bits) </p></li>
+</ul>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLDataType.code">
+<span class="target" id="structDLDataType_1aaa84983c485752e4401d80ce0e2b6e54"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">code</span></span></span><a class="headerlink" href="#c.DLDataType.code" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Type code of base types. We keep it uint8_t instead of DLDataTypeCode for minimal memory footprint, but the value should be one of DLDataTypeCode enum values. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLDataType.bits">
+<span class="target" id="structDLDataType_1a412e36fa9c58e808a2333e9044c5d9b5"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bits</span></span></span><a class="headerlink" href="#c.DLDataType.bits" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Number of bits, common choices are 8, 16, 32. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLDataType.lanes">
+<span class="target" id="structDLDataType_1a24de092fe56d358c1582e41499862594"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">lanes</span></span></span><a class="headerlink" href="#c.DLDataType.lanes" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Number of lanes in the type, used for vector types. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="c struct">
+<dt class="sig sig-object c" id="c.DLTensor">
+<span class="target" id="structDLTensor"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DLTensor</span></span></span><a class="headerlink" href="#c.DLTensor" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Plain C Tensor object, does not manage memory. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLTensor.data">
+<span class="target" id="structDLTensor_1a6af4539ae2c74d60e8dbc4c6047ed805"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><a class="headerlink" href="#c.DLTensor.data" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The data pointer points to the allocated data. This will be CUDA device pointer or cl_mem handle in OpenCL. It may be opaque on some device types. This pointer is always aligned to 256 bytes as in CUDA. The <code class="docutils literal notranslate"><span class="pre">byte_offset</span></code> field should be used to point to the beginning of the data. </p>
+<p>Note that as of Nov 2021, multiply libraries (CuPy, PyTorch, TensorFlow, TVM, perhaps others) do not adhere to this 256 byte aligment requirement on CPU/CUDA/ROCm, and always use <code class="docutils literal notranslate"><span class="pre">byte_offset=0</span></code>. This must be fixed (after which this note will be updated); at the moment it is recommended to not rely on the data pointer being correctly aligned.</p>
+<p>For given <a class="reference internal" href="#structDLTensor"><span class="std std-ref">DLTensor</span></a>, the size of memory required to store the contents of data is calculated as follows:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kr">inline</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="nf">GetDataSize</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">DLTensor</span><span class="o">*</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">tvm_index_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">t</span><span class="o">-&gt;</span><span class="n">ndim</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">size</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">t</span><span class="o">-&gt;</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">size</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">dtype</span><span class="p">.</span><span class="n">bits</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t</span><span class="o">-&gt;</span><span class="n">dtype</span><span class="p">.</span><span class="n">lanes</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that if the tensor is of size zero, then the data pointer should be set to <code class="docutils literal notranslate"><span class="pre">NULL</span></code>. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLTensor.device">
+<span class="target" id="structDLTensor_1a38995144d9ea19deeec30bfe80aa8362"></span><a class="reference internal" href="#c.DLDevice" title="DLDevice"><span class="n"><span class="pre">DLDevice</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">device</span></span></span><a class="headerlink" href="#c.DLTensor.device" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The device of the tensor. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLTensor.ndim">
+<span class="target" id="structDLTensor_1a028208c9b0c685fffe5eccf45f012388"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ndim</span></span></span><a class="headerlink" href="#c.DLTensor.ndim" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Number of dimensions. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLTensor.dtype">
+<span class="target" id="structDLTensor_1ae0cf02d1a8b19118838670b3b3d857f5"></span><a class="reference internal" href="#c.DLDataType" title="DLDataType"><span class="n"><span class="pre">DLDataType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dtype</span></span></span><a class="headerlink" href="#c.DLTensor.dtype" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The data type of the pointer. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLTensor.shape">
+<span class="target" id="structDLTensor_1a6e33904029ec8a18658b6bd62be28688"></span><span class="n"><span class="pre">int64_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">shape</span></span></span><a class="headerlink" href="#c.DLTensor.shape" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The shape of the tensor. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLTensor.strides">
+<span class="target" id="structDLTensor_1a0ad3b8079e712f711b716d34d418d44e"></span><span class="n"><span class="pre">int64_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">strides</span></span></span><a class="headerlink" href="#c.DLTensor.strides" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>strides of the tensor (in number of elements, not bytes) can be NULL, indicating tensor is compact and row-majored. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLTensor.byte_offset">
+<span class="target" id="structDLTensor_1a647dfbb2a3b976c4e9d1e17740dca568"></span><span class="n"><span class="pre">uint64_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">byte_offset</span></span></span><a class="headerlink" href="#c.DLTensor.byte_offset" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The offset in bytes to the beginning pointer to data. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="c struct">
+<dt class="sig sig-object c" id="c.DLManagedTensor">
+<span class="target" id="structDLManagedTensor"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DLManagedTensor</span></span></span><a class="headerlink" href="#c.DLManagedTensor" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>C Tensor object, manage memory of <a class="reference internal" href="#structDLTensor"><span class="std std-ref">DLTensor</span></a>. This data structure is intended to facilitate the borrowing of <a class="reference internal" href="#structDLTensor"><span class="std std-ref">DLTensor</span></a> by another framework. It is not meant to transfer the tensor. When the borrowing framework doesn’t need the tensor, it should call the deleter to notify the host that the resource is no longer needed. </p>
+<p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#structDLManagedTensorVersioned"><span class="std std-ref">DLManagedTensorVersioned</span></a></p>
+</div>
+</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This data structure is used as Legacy <a class="reference internal" href="#structDLManagedTensor"><span class="std std-ref">DLManagedTensor</span></a> in DLPack exchange and is deprecated after DLPack v0.8 Use <a class="reference internal" href="#structDLManagedTensorVersioned"><span class="std std-ref">DLManagedTensorVersioned</span></a> instead. This data structure may get renamed or deleted in future versions.</p>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLManagedTensor.dl_tensor">
+<span class="target" id="structDLManagedTensor_1a568171e573aca5ba30f2cbae9fd2489b"></span><a class="reference internal" href="#c.DLTensor" title="DLTensor"><span class="n"><span class="pre">DLTensor</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dl_tensor</span></span></span><a class="headerlink" href="#c.DLManagedTensor.dl_tensor" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><a class="reference internal" href="#structDLTensor"><span class="std std-ref">DLTensor</span></a> which is being memory managed. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLManagedTensor.manager_ctx">
+<span class="target" id="structDLManagedTensor_1af9bfa572555bd0b7855c5ae74ff96929"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">manager_ctx</span></span></span><a class="headerlink" href="#c.DLManagedTensor.manager_ctx" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>the context of the original host framework of <a class="reference internal" href="#structDLManagedTensor"><span class="std std-ref">DLManagedTensor</span></a> in which <a class="reference internal" href="#structDLManagedTensor"><span class="std std-ref">DLManagedTensor</span></a> is used in the framework. It can also be NULL. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLManagedTensor.deleter">
+<span class="target" id="structDLManagedTensor_1a3b5ac9adc40f2dbaf072531eb957d7ea"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deleter</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.DLManagedTensor" title="DLManagedTensor"><span class="n"><span class="pre">DLManagedTensor</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#c.DLManagedTensor.deleter" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Destructor - this should be called to destruct the manager_ctx which backs the <a class="reference internal" href="#structDLManagedTensor"><span class="std std-ref">DLManagedTensor</span></a>. It can be NULL if there is no way for the caller to provide a reasonable destructor. The destructor deletes the argument self as well. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="c struct">
+<dt class="sig sig-object c" id="c.DLManagedTensorVersioned">
+<span class="target" id="structDLManagedTensorVersioned"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DLManagedTensorVersioned</span></span></span><a class="headerlink" href="#c.DLManagedTensorVersioned" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A versioned and managed C Tensor object, manage memory of <a class="reference internal" href="#structDLTensor"><span class="std std-ref">DLTensor</span></a>. </p>
+<p>This data structure is intended to facilitate the borrowing of <a class="reference internal" href="#structDLTensor"><span class="std std-ref">DLTensor</span></a> by another framework. It is not meant to transfer the tensor. When the borrowing framework doesn’t need the tensor, it should call the deleter to notify the host that the resource is no longer needed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is the current standard DLPack exchange data structure. </p>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLManagedTensorVersioned.version">
+<span class="target" id="structDLManagedTensorVersioned_1a467a1c5a64eac7d1c4b79b0e1777c20f"></span><a class="reference internal" href="#c.DLPackVersion" title="DLPackVersion"><span class="n"><span class="pre">DLPackVersion</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">version</span></span></span><a class="headerlink" href="#c.DLManagedTensorVersioned.version" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The API and ABI version of the current managed Tensor. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLManagedTensorVersioned.manager_ctx">
+<span class="target" id="structDLManagedTensorVersioned_1a4ef2418855afca11ad86588e3a4af9d3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">manager_ctx</span></span></span><a class="headerlink" href="#c.DLManagedTensorVersioned.manager_ctx" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>the context of the original host framework. </p>
+<p>Stores <a class="reference internal" href="#structDLManagedTensorVersioned"><span class="std std-ref">DLManagedTensorVersioned</span></a> is used in the framework. It can also be NULL. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLManagedTensorVersioned.deleter">
+<span class="target" id="structDLManagedTensorVersioned_1a646bded1f34b21a942195e7f4b2a6d9e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deleter</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.DLManagedTensorVersioned" title="DLManagedTensorVersioned"><span class="n"><span class="pre">DLManagedTensorVersioned</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#c.DLManagedTensorVersioned.deleter" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Destructor. </p>
+<p>This should be called to destruct manager_ctx which holds the <a class="reference internal" href="#structDLManagedTensorVersioned"><span class="std std-ref">DLManagedTensorVersioned</span></a>. It can be NULL if there is no way for the caller to provide a reasonable destructor. The destructor deletes the argument self as well. </p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLManagedTensorVersioned.flags">
+<span class="target" id="structDLManagedTensorVersioned_1ae4ae22403724ef647a87df80553c8364"></span><span class="n"><span class="pre">uint64_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flags</span></span></span><a class="headerlink" href="#c.DLManagedTensorVersioned.flags" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Additional bitmask flags information about the tensor. </p>
+<p>By default the flags should be set to 0.</p>
+<p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#dlpack_8h_1a74a92911681dd478c419099b7a0ae5d4"><span class="std std-ref">DLPACK_FLAG_BITMASK_READ_ONLY</span></a></p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#dlpack_8h_1a8e4cc0613b32c4d4fd2d1560f41412ea"><span class="std std-ref">DLPACK_FLAG_BITMASK_IS_COPIED</span></a></p>
+</div>
+</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Future ABI changes should keep everything until this field stable, to ensure that deleter can be correctly called.</p>
+</div>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.DLManagedTensorVersioned.dl_tensor">
+<span class="target" id="structDLManagedTensorVersioned_1a9e9f2c2328b24d5b8dc37ee74d8b1d7a"></span><a class="reference internal" href="#c.DLTensor" title="DLTensor"><span class="n"><span class="pre">DLTensor</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dl_tensor</span></span></span><a class="headerlink" href="#c.DLManagedTensorVersioned.dl_tensor" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><a class="reference internal" href="#structDLTensor"><span class="std std-ref">DLTensor</span></a> which is being memory managed. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Welcome to DLPack’s documentation!</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="python_spec.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Python Specification for DLPack</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2022, DLPack contributors.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>
