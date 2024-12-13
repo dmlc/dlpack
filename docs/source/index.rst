@@ -25,6 +25,7 @@ developers. Highlights include:
   * `TVM <https://tvm.apache.org/docs/reference/api/python/contrib.html#module-tvm.contrib.dlpack>`_
   * `mpi4py <https://mpi4py.readthedocs.io/en/stable/overview.html#support-for-gpu-aware-mpi>`_
   * `Paddle <https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/api/paddle/utils/dlpack/from_dlpack_cn.html>`_
+  * `JAX <https://jax.readthedocs.io/en/latest/_autosummary/jax.dlpack.from_dlpack.html#jax.dlpack.from_dlpack>`_
 
 * Clean C ABI compatible.
 
