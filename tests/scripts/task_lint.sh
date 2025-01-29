@@ -1,6 +1,8 @@
 #!/bin/bash
 mkdir -p bin
 
+set -e -o pipefail
+
 if [ ! -f bin/lint.py ]; then
     echo "Grab linter ..."
     wget https://raw.githubusercontent.com/dmlc/dmlc-core/main/scripts/lint.py
