@@ -38,3 +38,4 @@ jobs:
     - name: Test
       run: |
         ./tests/scripts/task_build.sh
+        ./bin/mock
