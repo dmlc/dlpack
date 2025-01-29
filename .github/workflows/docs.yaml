@@ -22,8 +22,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get -y install build-essential doxygen
-        python3 -m pip install -U pip wheel
-        python3 -m pip install cmake ninja
+        python3 -m pip install -U --user pip wheel
+        python3 -m pip install --user cmake ninja
 
         python3 --version
         python3 -m pip --version
@@ -34,7 +34,7 @@ jobs:
 
     - name: Installing dependencies
       run: |
-        python3 -m pip install -r doc_requirements.txt
+        python3 -m pip install --user -r doc_requirements.txt
 
     - name: Testing CMakeLists.txt
       run: |

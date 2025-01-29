@@ -21,8 +21,8 @@ jobs:
 
     - name: Setup Python
       run: |
-        python3 -m pip install -U pip
-        python3 -m pip install cpplint
+        python3 -m pip install -U --user pip
+        python3 -m pip install --user cpplint
     - name: Setup@Ubuntu
       if: startsWith(matrix.os, 'ubuntu')
       run: |
