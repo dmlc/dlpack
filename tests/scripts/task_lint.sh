@@ -12,6 +12,8 @@ fi
 echo "Check codestyle of c++ code..."
 python bin/lint.py dlpack cpp include contrib
 
+set +e
+
 echo "Check doxygen generation..."
 make doc 2>log.txt
 (cat log.txt| grep -v ENABLE_PREPROCESSING |grep -v "unsupported tag") > logclean.txt
