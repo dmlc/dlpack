@@ -17,10 +17,11 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Setup Python
       run: |
+        python3 -m pip install -U pip
         python3 -m pip install cpplint
     - name: Setup@Ubuntu
       if: startsWith(matrix.os, 'ubuntu')
