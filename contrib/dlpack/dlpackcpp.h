@@ -46,7 +46,7 @@ class DLTContainer {
   void Reshape(const std::vector<int64_t>& shape) {
     shape_ = shape;
     int64_t sz = std::accumulate(std::begin(shape), std::end(shape),
-                                 int64_t(1), std::multiplies<int64_t>());
+                                 static_cast<int64_t>(1), std::multiplies<int64_t>());
     int ret = posix_memalign(&handle_.data, 256, sz);
     if (ret != 0) throw std::bad_alloc();
     handle_.shape = &shape_[0];
