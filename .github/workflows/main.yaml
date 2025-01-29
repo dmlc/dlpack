@@ -18,11 +18,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
 
     - name: Setup Python
       run: |
-        python3 -m pip install -U --user pip
-        python3 -m pip install --user cpplint
+        pip install -U pip
+        pip install cpplint
     - name: Setup@Ubuntu
       if: startsWith(matrix.os, 'ubuntu')
       run: |

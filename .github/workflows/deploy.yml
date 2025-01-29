@@ -23,7 +23,7 @@ jobs:
 
     - name: Installing dependencies
       run: |
-        python3 -m pip install --user -r doc_requirements.txt
+        python3 -m pip install -r doc_requirements.txt
 
     - name: Generating Docs
       run: |
