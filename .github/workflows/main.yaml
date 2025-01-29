@@ -33,7 +33,7 @@ jobs:
     - name: Lint
       if: startsWith(matrix.os, 'ubuntu')
       run: |
-        pip install -U sphinx
+        pip install -r doc_requirements.txt
         ./tests/scripts/task_lint.sh
     - name: Test
       run: |
