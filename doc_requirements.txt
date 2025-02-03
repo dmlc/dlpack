@@ -1,3 +1,4 @@
 Sphinx==5.*
 pydata-sphinx-theme==0.7.1
 breathe>=4.31.0
+pylint==2.17.*
