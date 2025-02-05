@@ -1,6 +1,8 @@
 #!/bin/bash
 mkdir -p bin
 
+set -e -o pipefail
+
 if [ ! -f bin/lint.py ]; then
     echo "Grab linter ..."
     wget https://raw.githubusercontent.com/dmlc/dmlc-core/main/scripts/lint.py
@@ -9,6 +11,8 @@ fi
 
 echo "Check codestyle of c++ code..."
 python bin/lint.py dlpack cpp include contrib
+
+set +e
 
 echo "Check doxygen generation..."
 make doc 2>log.txt
