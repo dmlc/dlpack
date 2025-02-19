@@ -157,6 +157,20 @@ typedef enum {
   kDLComplex = 5U,
   /*! \brief boolean */
   kDLBool = 6U,
+  /*! \brief FP8 data types. Must set DLDataType.bits=8. */
+  kDLFloat8_e3m4 = 7U,
+  kDLFloat8_e4m3 = 8U,
+  kDLFloat8_e4m3b11fnuz = 9U,
+  kDLFloat8_e4m3fn = 10U,
+  kDLFloat8_e4m3fnuz = 11U,
+  kDLFloat8_e5m2 = 12U,
+  kDLFloat8_e5m2fnuz = 13U,
+  kDLFloat8_e8m0fnu = 14U,
+  /*! \brief FP6 data types. Must set DLDataType.bits=6. */
+  kDLFloat6_e2m3fn = 15U,
+  kDLFloat6_e3m2fn = 16U,
+  /*! \brief FP4 data types. Must set DLDataType.bits=4. */
+  kDLFloat4_e2m1fn = 17U,
 } DLDataTypeCode;
 
 /*!
