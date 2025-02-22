@@ -157,7 +157,7 @@ typedef enum {
   kDLComplex = 5U,
   /*! \brief boolean */
   kDLBool = 6U,
-  /*! \brief FP8 data types. Must set DLDataType.bits=8. */
+  /*! \brief FP8 data types */
   kDLFloat8_e3m4 = 7U,
   kDLFloat8_e4m3 = 8U,
   kDLFloat8_e4m3b11fnuz = 9U,
@@ -166,10 +166,16 @@ typedef enum {
   kDLFloat8_e5m2 = 12U,
   kDLFloat8_e5m2fnuz = 13U,
   kDLFloat8_e8m0fnu = 14U,
-  /*! \brief FP6 data types. Must set DLDataType.bits=6. */
+  /*! \brief FP6 data types
+   * Setting bits != 6 is currently unspecified, and the producer must ensure it is set
+   * while the consumer must stop importing if the value is unexpected.
+   */
   kDLFloat6_e2m3fn = 15U,
   kDLFloat6_e3m2fn = 16U,
-  /*! \brief FP4 data types. Must set DLDataType.bits=4. */
+  /*! \brief FP4 data types
+   * Setting bits != 4 is currently unspecified, and the producer must ensure it is set
+   * while the consumer must stop importing if the value is unexpected.
+   */
   kDLFloat4_e2m1fn = 17U,
 } DLDataTypeCode;
 
@@ -184,6 +190,9 @@ typedef enum {
  *   - int8: type_code = 0, bits = 8, lanes = 1
  *   - std::complex<float>: type_code = 5, bits = 64, lanes = 1
  *   - bool: type_code = 6, bits = 8, lanes = 1 (as per common array library convention, the underlying storage size of bool is 8 bits)
+ *   - float8_e4m3: type_code = 8, bits = 8, lanes = 1 (packed in memory)
+ *   - float6_e3m2fn: type_code = 16, bits = 6, lanes = 1 (packed in memory)
+ *   - float4_e2m1fn: type_code = 17, bits = 4, lanes = 1 (packed in memory)
  */
 typedef struct {
   /*!
