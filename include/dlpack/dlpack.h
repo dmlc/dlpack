@@ -193,6 +193,9 @@ typedef enum {
  *   - float8_e4m3: type_code = 8, bits = 8, lanes = 1 (packed in memory)
  *   - float6_e3m2fn: type_code = 16, bits = 6, lanes = 1 (packed in memory)
  *   - float4_e2m1fn: type_code = 17, bits = 4, lanes = 1 (packed in memory)
+ *
+ *  When a sub-byte type is packed, DLPack requires the data to be in little bit-endian, i.e.,
+ *  for a packed data set D ((D >> (i * bits)) && bit_mask) stores the i-th element.
  */
 typedef struct {
   /*!
@@ -302,6 +305,14 @@ typedef struct DLManagedTensor {
  * consumer, until the producer-provided deleter is invoked.
  */
 #define DLPACK_FLAG_BITMASK_IS_COPIED (1UL << 1UL)
+
+/*
+ * \brief bit mask to indicate that whether a sub-byte type is packed or padded.
+ *
+ * The default for sub-byte types (ex: fp4/fp6) is assumed packed. This flag can
+ * be set by the producer to signal that a tensor of sub-byte type is padded.
+ */
+#define DLPACK_FLAG_BITMASK_IS_SUBBYTE_TYPE_PADDED (1UL << 2UL)
 
 /*!
  * \brief A versioned and managed C Tensor object, manage memory of DLTensor.
