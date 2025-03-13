@@ -18,6 +18,8 @@ Macros
 
 .. doxygendefine:: DLPACK_FLAG_BITMASK_IS_COPIED
 
+.. doxygendefine:: DLPACK_FLAG_BITMASK_IS_SUBBYTE_TYPE_PADDED
+
 Enumerations
 ~~~~~~~~~~~~
 
