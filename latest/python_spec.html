@@ -1,0 +1,414 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Python Specification for DLPack &#8212; DLPack 0.6.0 documentation</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/blank.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="C API (dlpack.h)" href="c_api.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="index.html">
+<p class="title">DLPack</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="c_api.html">
+  C API (
+  <code class="docutils literal notranslate">
+   <span class="pre">
+    dlpack.h
+   </span>
+  </code>
+  )
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
+  Python Specification for DLPack
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/dmlc/dlpack" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#syntax-for-data-interchange-with-dlpack">
+   Syntax for data interchange with DLPack
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#semantics">
+   Semantics
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#implementation">
+   Implementation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#reference-implementations">
+   Reference Implementations
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+
+<div class="tocsection editthispage">
+    <a href="https://github.com/dmlc/dlpack/edit/main/docs/source/python_spec.rst">
+        <i class="fas fa-pencil-alt"></i> Edit this page
+    </a>
+</div>
+
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="python-specification-for-dlpack">
+<span id="python-spec"></span><h1>Python Specification for DLPack<a class="headerlink" href="#python-specification-for-dlpack" title="Permalink to this heading">¶</a></h1>
+<p>The Python specification for DLPack is a part of the
+<a class="reference external" href="https://data-apis.org/array-api/latest/index.html">Python array API standard</a>.
+More details about the spec can be found under the <a class="reference external" href="https://data-apis.org/array-api/latest/design_topics/data_interchange.html#data-interchange" title="(in Python array API standard)"><span>Data interchange mechanisms</span></a> page.</p>
+<section id="syntax-for-data-interchange-with-dlpack">
+<h2>Syntax for data interchange with DLPack<a class="headerlink" href="#syntax-for-data-interchange-with-dlpack" title="Permalink to this heading">¶</a></h2>
+<p>The array API will offer the following syntax for data interchange:</p>
+<ol class="arabic simple">
+<li><p>A <a class="reference external" href="https://data-apis.org/array-api/latest/API_specification/generated/array_api.from_dlpack.html#array_api.from_dlpack" title="(in Python array API standard)"><code class="xref py py-func docutils literal notranslate"><span class="pre">from_dlpack()</span></code></a> function, which accepts any (array) object with
+the two DLPack methods implemented (see below) and uses them to construct
+a new array containing the data from the input array.</p></li>
+<li><p><a class="reference external" href="https://data-apis.org/array-api/latest/API_specification/generated/array_api.array.__dlpack__.html#array_api.array.__dlpack__" title="(in Python array API standard)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__dlpack__()</span></code></a> and <a class="reference external" href="https://data-apis.org/array-api/latest/API_specification/generated/array_api.array.__dlpack_device__.html#array_api.array.__dlpack_device__" title="(in Python array API standard)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__dlpack_device__()</span></code></a> methods on the
+array object, which will be called from within <a class="reference external" href="https://data-apis.org/array-api/latest/API_specification/generated/array_api.from_dlpack.html#array_api.from_dlpack" title="(in Python array API standard)"><code class="xref py py-func docutils literal notranslate"><span class="pre">from_dlpack()</span></code></a>, to query
+what device the array is on (may be needed to pass in the correct
+stream, e.g. in the case of multiple GPUs) and to access the data.</p></li>
+</ol>
+</section>
+<section id="semantics">
+<h2>Semantics<a class="headerlink" href="#semantics" title="Permalink to this heading">¶</a></h2>
+<p>DLPack describes the memory layout of dense, strided, n-dimensional arrays.
+When a user calls <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">from_dlpack(x)</span></code>, the library implementing <code class="docutils literal notranslate"><span class="pre">x</span></code> (the
+“producer”) will provide access to the data from <code class="docutils literal notranslate"><span class="pre">x</span></code> to the library
+containing <code class="docutils literal notranslate"><span class="pre">from_dlpack</span></code> (the “consumer”). If possible, this must be
+zero-copy (i.e. <code class="docutils literal notranslate"><span class="pre">y</span></code> will be a <em>view</em> on <code class="docutils literal notranslate"><span class="pre">x</span></code>). If not possible, that library
+may flag this and make a copy of the data. In both cases:</p>
+<ul class="simple">
+<li><p>The producer keeps owning the memory of <code class="docutils literal notranslate"><span class="pre">x</span></code> (and <code class="docutils literal notranslate"><span class="pre">y</span></code> if a copy is made)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y</span></code> may or may not be a view, therefore the user must keep the recommendation to
+avoid mutating <code class="docutils literal notranslate"><span class="pre">y</span></code> in mind - see <a class="reference external" href="https://data-apis.org/array-api/latest/design_topics/copies_views_and_mutation.html#copyview-mutability" title="(in Python array API standard)"><span>Copy-view behavior and mutability</span></a>.</p></li>
+<li><p>Both <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> may continue to be used just like arrays created in other ways.</p></li>
+</ul>
+<p>If an array that is accessed via the interchange protocol lives on a device that
+the requesting (consumer) library does not support, it is recommended to raise a
+<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#BufferError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BufferError</span></code></a>, unless an explicit copy is requested (see below) and the producer
+can support the request.</p>
+<p>Stream handling through the <code class="docutils literal notranslate"><span class="pre">stream</span></code> keyword applies to CUDA and ROCm (perhaps
+to other devices that have a stream concept as well, however those haven’t been
+considered in detail). The consumer must pass the stream it will use to the
+producer; the producer must synchronize or wait on the stream when necessary.
+In the common case of the default stream being used, synchronization will be
+unnecessary so asynchronous execution is enabled.</p>
+<p>Starting Python array API standard v2023, a copy can be explicitly requested (or
+disabled) through the new <code class="docutils literal notranslate"><span class="pre">copy</span></code> argument of <code class="docutils literal notranslate"><span class="pre">from_dlpack()</span></code>. When a copy is
+made, the producer must set the <a class="reference internal" href="c_api.html#c.DLPACK_FLAG_BITMASK_IS_COPIED" title="DLPACK_FLAG_BITMASK_IS_COPIED"><code class="xref c c-macro docutils literal notranslate"><span class="pre">DLPACK_FLAG_BITMASK_IS_COPIED</span></code></a> bit flag.
+It is also possible to request cross-device copies through the new <code class="docutils literal notranslate"><span class="pre">device</span></code>
+argument, though the v2023 standard only mandates the support of <a class="reference internal" href="c_api.html#c.DLDeviceType.kDLCPU" title="kDLCPU"><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">kDLCPU</span></code></a>.</p>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading">¶</a></h2>
+<p><em>Note that while this API standard largely tries to avoid discussing
+implementation details, some discussion and requirements are needed
+here because data interchange requires coordination between
+implementers on, e.g., memory management.</em></p>
+<img alt="Diagram of DLPack structs" src="_images/DLPack_diagram.png" />
+<p><em>DLPack diagram. Dark blue are the structs it defines, light blue
+struct members, gray text enum values of supported devices and data
+types.</em></p>
+<p>Starting Python array API standard v2023, a new <code class="docutils literal notranslate"><span class="pre">max_version</span></code> argument
+is added to <code class="docutils literal notranslate"><span class="pre">__dlpack__</span></code> for the consumer to signal the producer the
+maximal supported DLPack version. Starting DLPack 1.0, the <a class="reference internal" href="c_api.html#c.DLManagedTensorVersioned" title="DLManagedTensorVersioned"><code class="xref c c-struct docutils literal notranslate"><span class="pre">DLManagedTensorVersioned</span></code></a>
+struct should be used and the existing <a class="reference internal" href="c_api.html#c.DLManagedTensor" title="DLManagedTensor"><code class="xref c c-struct docutils literal notranslate"><span class="pre">DLManagedTensor</span></code></a> struct is considered
+deprecated, though a library should try to support both during the transition
+period if possible.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the rest of this document, <code class="docutils literal notranslate"><span class="pre">DLManagedTensorVersioned</span></code> and <code class="docutils literal notranslate"><span class="pre">DLManagedTensor</span></code>
+are treated as synonyms, assuming a proper handling of <code class="docutils literal notranslate"><span class="pre">max_version</span></code> has been
+done to choose the right struct. As far as the capsule name is concerned,
+when <code class="docutils literal notranslate"><span class="pre">DLManagedTensorVersioned</span></code> is in use the capsule names <code class="docutils literal notranslate"><span class="pre">dltensor</span></code>
+and <code class="docutils literal notranslate"><span class="pre">used_dltensor</span></code> will need a <code class="docutils literal notranslate"><span class="pre">_versioned</span></code> suffix.</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">__dlpack__</span></code> method will produce a <a class="reference external" href="https://docs.python.org/3/c-api/capsule.html#c.PyCapsule" title="(in Python v3.13)"><code class="xref c c-type docutils literal notranslate"><span class="pre">PyCapsule</span></code></a> containing a
+<code class="docutils literal notranslate"><span class="pre">DLManagedTensor</span></code>, which will be consumed immediately within
+<code class="docutils literal notranslate"><span class="pre">from_dlpack</span></code> - therefore it is consumed exactly once, and it will not be
+visible to users of the Python API.</p>
+<p>The producer must set the <code class="docutils literal notranslate"><span class="pre">PyCapsule</span></code> name to <code class="docutils literal notranslate"><span class="pre">&quot;dltensor&quot;</span></code> so that
+it can be inspected by name, and set <a class="reference external" href="https://docs.python.org/3/c-api/capsule.html#c.PyCapsule_Destructor" title="(in Python v3.13)"><code class="xref c c-type docutils literal notranslate"><span class="pre">PyCapsule_Destructor</span></code></a> that calls
+the <code class="docutils literal notranslate"><span class="pre">deleter</span></code> of the <code class="docutils literal notranslate"><span class="pre">DLManagedTensor</span></code> when the <code class="docutils literal notranslate"><span class="pre">&quot;dltensor&quot;</span></code>-named
+capsule is no longer needed.</p>
+<p>The consumer must transer ownership of the <code class="docutils literal notranslate"><span class="pre">DLManagedTensor</span></code> from the
+capsule to its own object. It does so by renaming the capsule to
+<code class="docutils literal notranslate"><span class="pre">&quot;used_dltensor&quot;</span></code> to ensure that <code class="docutils literal notranslate"><span class="pre">PyCapsule_Destructor</span></code> will not get
+called (ensured if <code class="docutils literal notranslate"><span class="pre">PyCapsule_Destructor</span></code> calls <code class="docutils literal notranslate"><span class="pre">deleter</span></code> only for
+capsules whose name is <code class="docutils literal notranslate"><span class="pre">&quot;dltensor&quot;</span></code>), but the <code class="docutils literal notranslate"><span class="pre">deleter</span></code> of the
+<code class="docutils literal notranslate"><span class="pre">DLManagedTensor</span></code> will be called by the destructor of the consumer
+library object created to own the <code class="docutils literal notranslate"><span class="pre">DLManagedTensor</span></code> obtained from the
+capsule. Below is an example of the capsule deleter written in the Python
+C API which is called either when the refcount on the capsule named
+<code class="docutils literal notranslate"><span class="pre">&quot;dltensor&quot;</span></code> reaches zero or the consumer decides to deallocate its array:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">dlpack_capsule_deleter</span><span class="p">(</span><span class="n">PyObject</span><span class="w"> </span><span class="o">*</span><span class="n">self</span><span class="p">){</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">PyCapsule_IsValid</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;used_dltensor&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span><span class="w">  </span><span class="cm">/* Do nothing if the capsule has been consumed. */</span>
+<span class="w">   </span><span class="p">}</span>
+
+<span class="w">   </span><span class="n">DLManagedTensor</span><span class="w"> </span><span class="o">*</span><span class="n">managed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">DLManagedTensor</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">PyCapsule_GetPointer</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dltensor&quot;</span><span class="p">);</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">managed</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">PyErr_WriteUnraisable</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="w">   </span><span class="cm">/* the spec says the deleter can be NULL if there is no way for the caller to provide a reasonable destructor. */</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">managed</span><span class="o">-&gt;</span><span class="n">deleter</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">managed</span><span class="o">-&gt;</span><span class="n">deleter</span><span class="p">(</span><span class="n">managed</span><span class="p">);</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note: the capsule names <code class="docutils literal notranslate"><span class="pre">&quot;dltensor&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;used_dltensor&quot;</span></code> must be
+statically allocated.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">DLManagedTensor</span></code> deleter must ensure that sharing beyond Python
+boundaries is possible, this means that the GIL must be acquired explicitly
+if it uses Python objects or API.
+In Python, the deleter usually needs to <a class="reference external" href="https://docs.python.org/3/c-api/refcounting.html#c.Py_DECREF" title="(in Python v3.13)"><code class="xref c c-func docutils literal notranslate"><span class="pre">Py_DECREF()</span></code></a> the original owner
+and free the <code class="docutils literal notranslate"><span class="pre">DLManagedTensor</span></code> allocation.
+For example, NumPy uses the following code to ensure sharing with arbitrary
+non-Python code is safe:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">array_dlpack_deleter</span><span class="p">(</span><span class="n">DLManagedTensor</span><span class="w"> </span><span class="o">*</span><span class="n">self</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="cm">/*</span>
+<span class="cm">    * Leak the Python object if the Python runtime is not available.</span>
+<span class="cm">    * This can happen if the DLPack consumer destroys the tensor late</span>
+<span class="cm">    * after Python runtime finalization (for example in case the tensor</span>
+<span class="cm">    * was indirectly kept alive by a C++ static variable).</span>
+<span class="cm">    */</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">Py_IsInitialized</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span>
+<span class="w">   </span><span class="p">}</span>
+
+<span class="w">   </span><span class="n">PyGILState_STATE</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PyGILState_Ensure</span><span class="p">();</span>
+
+<span class="w">   </span><span class="n">PyObject</span><span class="w"> </span><span class="o">*</span><span class="n">array</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">PyObject</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">self</span><span class="o">-&gt;</span><span class="n">manager_ctx</span><span class="p">;</span>
+<span class="w">   </span><span class="c1">// This will also free the shape and strides as it&#39;s one allocation.</span>
+<span class="w">   </span><span class="n">PyMem_Free</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+<span class="w">   </span><span class="n">Py_XDECREF</span><span class="p">(</span><span class="n">array</span><span class="p">);</span>
+
+<span class="w">   </span><span class="n">PyGILState_Release</span><span class="p">(</span><span class="n">state</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>When the <a class="reference internal" href="c_api.html#c.DLTensor.strides" title="DLTensor.strides"><code class="xref c c-member docutils literal notranslate"><span class="pre">strides</span></code></a> field in the <a class="reference internal" href="c_api.html#c.DLTensor" title="DLTensor"><code class="xref c c-struct docutils literal notranslate"><span class="pre">DLTensor</span></code></a> struct is <code class="docutils literal notranslate"><span class="pre">NULL</span></code>, it indicates a
+row-major compact array. If the array is of size zero, the data pointer in
+<code class="docutils literal notranslate"><span class="pre">DLTensor</span></code> should be set to either <code class="docutils literal notranslate"><span class="pre">NULL</span></code> or <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+<p>For further details on DLPack design and how to implement support for it,
+refer to <a class="reference external" href="https://github.com/dmlc/dlpack">github.com/dmlc/dlpack</a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>DLPack contains a <a class="reference internal" href="c_api.html#c.DLDevice.device_id" title="DLDevice.device_id"><code class="xref c c-member docutils literal notranslate"><span class="pre">device_id</span></code></a>, which will be the device
+ID (an integer, <code class="docutils literal notranslate"><span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">...</span></code>) which the producer library uses. In
+practice this will likely be the same numbering as that of the
+consumer, however that is not guaranteed. Depending on the hardware
+type, it may be possible for the consumer library implementation to
+look up the actual device from the pointer to the data - this is
+possible for example for CUDA device pointers.</p>
+<p>It is recommended that implementers of this array API consider and document
+whether the <a class="reference external" href="https://data-apis.org/array-api/latest/API_specification/generated/array_api.array.device.html#array_api.array.device" title="(in Python array API standard)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">device</span></code></a> attribute of the array returned from <code class="docutils literal notranslate"><span class="pre">from_dlpack</span></code> is
+guaranteed to be in a certain order or not.</p>
+</div>
+</section>
+<section id="reference-implementations">
+<h2>Reference Implementations<a class="headerlink" href="#reference-implementations" title="Permalink to this heading">¶</a></h2>
+<p>Several Python libraries have adopted this standard using Python C API, C++, Cython,
+ctypes, cffi, etc:</p>
+<ul class="simple">
+<li><p>NumPy: <a class="reference external" href="https://github.com/numpy/numpy/blob/main/numpy/_core/src/multiarray/dlpack.c">Python C API</a></p></li>
+<li><p>CuPy: <a class="reference external" href="https://github.com/cupy/cupy/blob/master/cupy/_core/dlpack.pyx">Cython</a></p></li>
+<li><p>Tensorflow: <a class="reference external" href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/c/eager/dlpack.cc">C++</a>,
+<a class="reference external" href="https://github.com/tensorflow/tensorflow/blob/a97b01a4ff009ed84a571c138837130a311e74a7/tensorflow/python/tfe_wrapper.cc#L1562">Python wrapper using Python C API</a>,
+<a class="reference external" href="https://github.com/tensorflow/tensorflow/blob/master/third_party/xla/xla/python/dlpack.cc">XLA</a></p></li>
+<li><p>PyTorch: <a class="reference external" href="https://github.com/pytorch/pytorch/blob/master/aten/src/ATen/DLConvertor.cpp">C++</a>,
+<a class="reference external" href="https://github.com/pytorch/pytorch/blob/c22b8a42e6038ed2f6a161114cf3d8faac3f6e9a/torch/csrc/Module.cpp#L355">Python wrapper using Python C API</a></p></li>
+<li><p>MXNet: <a class="reference external" href="https://github.com/apache/incubator-mxnet/blob/master/python/mxnet/dlpack.py">ctypes</a></p></li>
+<li><p>TVM: <a class="reference external" href="https://github.com/apache/tvm/blob/main/python/tvm/_ffi/_ctypes/ndarray.py">ctypes</a>,
+<a class="reference external" href="https://github.com/apache/tvm/blob/main/python/tvm/_ffi/_cython/ndarray.pxi">Cython</a></p></li>
+<li><p>mpi4py: <a class="reference external" href="https://github.com/mpi4py/mpi4py/blob/master/src/mpi4py/MPI.src/asdlpack.pxi">Cython</a></p></li>
+<li><p>Paddle: <a class="reference external" href="https://github.com/PaddlePaddle/Paddle/blob/develop/paddle/fluid/framework/tensor_util.cc#L901-L951">C++</a>, <a class="reference external" href="https://github.com/PaddlePaddle/Paddle/blob/develop/paddle/fluid/pybind/pybind.cc#L1263-L1280">Python wrapper using Python C API</a></p></li>
+<li><p>Hidet: <a class="reference external" href="https://github.com/hidet-org/hidet/blob/main/python/hidet/graph/impl/dlpack.py">ctypes</a></p></li>
+</ul>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="c_api.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">C API (<code class="docutils literal notranslate"><span class="pre">dlpack.h</span></code>)</p>
+        </div>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2022, DLPack contributors.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>
