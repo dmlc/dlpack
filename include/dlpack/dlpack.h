@@ -306,7 +306,7 @@ typedef struct DLManagedTensor {
  */
 #define DLPACK_FLAG_BITMASK_IS_COPIED (1UL << 1UL)
 
-/*
+/*!
  * \brief bit mask to indicate that whether a sub-byte type is packed or padded.
  *
  * The default for sub-byte types (ex: fp4/fp6) is assumed packed. This flag can
