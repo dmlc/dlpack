@@ -1,8 +1,10 @@
 ###
-# Set minimum version of CMake. Since command 'project' use
-# VERSION sub-option we need at least 3.0.
-# Note: If you use 2.6 or 2.4, God kills a kitten. Seriously.
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+# Set minimum version of CMake. CMake 4.0 drops support for CMake<3.06 so that
+# is the absolute lowest that we could allow without blocking the usage of new
+# versions of CMake. Using 3.16 since it is the supported version on Ubuntu
+# 20.04 LTS (using that as a representative distro for our desired level of
+# backwards compatibility).
+cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
 ####
 # Set variables:
