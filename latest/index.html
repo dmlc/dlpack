@@ -1,0 +1,341 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Welcome to DLPack’s documentation! &#8212; DLPack 0.6.0 documentation</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/blank.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="C API (dlpack.h)" href="c_api.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="#">
+<p class="title">DLPack</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="c_api.html">
+  C API (
+  <code class="docutils literal notranslate">
+   <span class="pre">
+    dlpack.h
+   </span>
+  </code>
+  )
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="python_spec.html">
+  Python Specification for DLPack
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/dmlc/dlpack" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Welcome to DLPack’s documentation!
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#purpose">
+     Purpose
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#scope">
+     Scope
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#roadmap">
+     Roadmap
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dlpack-documentation">
+     DLPack Documentation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#indices-and-tables">
+   Indices and tables
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+
+<div class="tocsection editthispage">
+    <a href="https://github.com/dmlc/dlpack/edit/main/docs/source/index.rst">
+        <i class="fas fa-pencil-alt"></i> Edit this page
+    </a>
+</div>
+
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="welcome-to-dlpack-s-documentation">
+<h1>Welcome to DLPack’s documentation!<a class="headerlink" href="#welcome-to-dlpack-s-documentation" title="Permalink to this heading">¶</a></h1>
+<section id="purpose">
+<h2>Purpose<a class="headerlink" href="#purpose" title="Permalink to this heading">¶</a></h2>
+<p>In order for an ndarray system to interact with a variety of frameworks, a
+stable in-memory data structure is needed.</p>
+<p>DLPack is one such data structure that allows exchange between major
+frameworks. It is developed with inputs from many deep learning system core
+developers. Highlights include:</p>
+<ul class="simple">
+<li><p>Minimum and stable: <a class="reference internal" href="c_api.html#c-api"><span class="std std-ref">simple header</span></a></p></li>
+<li><p>Designed for cross hardware: CPU, CUDA, OpenCL, Vulkan, Metal, VPI, ROCm,
+WebGPU, Hexagon</p></li>
+<li><p>Already a standard with wide community adoption and support:</p>
+<ul>
+<li><p><a class="reference external" href="https://numpy.org/doc/stable/release/1.22.0-notes.html#add-nep-47-compatible-dlpack-support">NumPy</a></p></li>
+<li><p><a class="reference external" href="https://docs.cupy.dev/en/stable/reference/generated/cupy.fromDlpack.html">CuPy</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/docs/stable/dlpack.html">PyTorch</a></p></li>
+<li><p><a class="reference external" href="https://www.tensorflow.org/api_docs/python/tf/experimental/dlpack/from_dlpack">Tensorflow</a></p></li>
+<li><p><a class="reference external" href="https://mxnet.apache.org/versions/master/api/python/docs/_modules/mxnet/dlpack.html">MXNet</a></p></li>
+<li><p><a class="reference external" href="https://tvm.apache.org/docs/reference/api/python/contrib.html#module-tvm.contrib.dlpack">TVM</a></p></li>
+<li><p><a class="reference external" href="https://mpi4py.readthedocs.io/en/stable/overview.html#support-for-gpu-aware-mpi">mpi4py</a></p></li>
+<li><p><a class="reference external" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/api/paddle/utils/dlpack/from_dlpack_cn.html">Paddle</a></p></li>
+<li><p><a class="reference external" href="https://jax.readthedocs.io/en/latest/_autosummary/jax.dlpack.from_dlpack.html#jax.dlpack.from_dlpack">JAX</a></p></li>
+<li><p><a class="reference external" href="https://hidet.org/docs/stable/python_api/root.html#hidet.from_dlpack">Hidet</a></p></li>
+</ul>
+</li>
+<li><p>Clean C ABI compatible.</p>
+<ul>
+<li><p>Means you can create and access it from any language.</p></li>
+<li><p>It is also essential for building JIT and AOT compilers to support these
+data types.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="scope">
+<h2>Scope<a class="headerlink" href="#scope" title="Permalink to this heading">¶</a></h2>
+<p>The main design rationale of DLPack is the minimalism. DLPack drops the
+consideration of allocator, device API and focus on the minimum data
+structure. While still considering the need for cross hardware support
+(e.g. the data field is opaque for platforms that does not support normal
+addressing).</p>
+<p>It also simplifies some of the design to remove legacy issues (e.g. everything
+assumes to be row major, strides can be used to support other case, and avoid
+the complexity to consider more layouts).</p>
+</section>
+<section id="roadmap">
+<h2>Roadmap<a class="headerlink" href="#roadmap" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>C API that could be exposed as a new Python attribute <code class="docutils literal notranslate"><span class="pre">__dlpack_info__</span></code>
+for returning API and ABI versions. (see <a class="reference external" href="https://github.com/dmlc/dlpack/issues/34">#34</a>,
+<a class="reference external" href="https://github.com/dmlc/dlpack/pull/72">#72</a>)</p></li>
+<li><p>Clarify alignment requirements. (see
+<a class="reference external" href="https://github.com/data-apis/array-api/issues/293">data-apis/array-api#293</a>,
+<a class="reference external" href="https://github.com/numpy/numpy/issues/20338">numpy/numpy#20338</a>,
+<a class="reference external" href="https://github.com/data-apis/array-api/issues/293#issuecomment-964434449">data-apis/array-api#293 (comment)</a>)</p></li>
+<li><p>Adding support for boolean data type (see <a class="reference external" href="https://github.com/dmlc/dlpack/issues/75">#75</a>)</p></li>
+<li><p>Adding a read-only flag (ABI break) or making it a hard requirement in the spec that
+imported arrays should be treated as read-only. (see
+<a class="reference external" href="https://github.com/data-apis/consortium-feedback/issues/1#issuecomment-675857753">data-apis/consortium-feedback#1 (comment)</a>,
+<a class="reference external" href="https://github.com/data-apis/array-api/issues/191">data-apis/array-api#191</a>)</p></li>
+<li><p>Standardize C interface for stream exchange. (see <a class="reference external" href="https://github.com/dmlc/dlpack/issues/74">#74</a>,
+<a class="reference external" href="https://github.com/dmlc/dlpack/issues/65">#65</a>)</p></li>
+</ul>
+</section>
+<section id="dlpack-documentation">
+<h2>DLPack Documentation<a class="headerlink" href="#dlpack-documentation" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="c_api.html">C API (<code class="docutils literal notranslate"><span class="pre">dlpack.h</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="c_api.html#macros">Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c_api.html#enumerations">Enumerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c_api.html#structs">Structs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="python_spec.html">Python Specification for DLPack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="python_spec.html#syntax-for-data-interchange-with-dlpack">Syntax for data interchange with DLPack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_spec.html#semantics">Semantics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_spec.html#implementation">Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_spec.html#reference-implementations">Reference Implementations</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='right-next' id="next-link" href="c_api.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">C API (<code class="docutils literal notranslate"><span class="pre">dlpack.h</span></code>)</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2022, DLPack contributors.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>
