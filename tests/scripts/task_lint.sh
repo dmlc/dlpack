@@ -5,7 +5,7 @@ set -e -o pipefail
 
 if [ ! -f bin/lint.py ]; then
     echo "Grab linter ..."
-    wget https://raw.githubusercontent.com/dmlc/dmlc-core/main/scripts/lint.py
+    wget https://raw.githubusercontent.com/dmlc/dmlc-core/28c2bfd2a8cf46e632e30d7fec006d3ee4b26b1c/scripts/lint.py
     mv lint.py bin/lint.py
 fi
 
