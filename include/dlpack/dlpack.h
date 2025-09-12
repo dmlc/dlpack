@@ -1,5 +1,5 @@
 /*!
- *  Copyright (c) 2017 by Contributors
+ *  Copyright (c) 2017 -  by Contributors
  * \file dlpack.h
  * \brief The common header of DLPack.
  */
@@ -326,7 +326,7 @@ typedef struct DLManagedTensor {
  *
  * \note This is the current standard DLPack exchange data structure.
  */
-struct DLManagedTensorVersioned {
+typedef struct DLManagedTensorVersioned {
   /*!
    * \brief The API and ABI version of the current managed Tensor
    */
@@ -360,7 +360,86 @@ struct DLManagedTensorVersioned {
   uint64_t flags;
   /*! \brief DLTensor which is being memory managed */
   DLTensor dl_tensor;
-};
+} DLManagedTensorVersioned;
+
+//--------------------------------------------------------------------
+// DLPack C functions for speed exchange
+//--------------------------------------------------------------------
+/*
+ * \brief A generic C-style allocator that exposes allocation of a Tensor/Array.
+ *
+ * Array/Tensor libraries can store this field as an int in the type of the Tensor/Array.
+ *
+ * mypackage.Tensor.__c_dlpack_tensor_allocator__ = MyPackageDLPackTensorAllocator
+ *
+ * This information can then be used to set allocators of a callee to run allocations.
+ *
+ * This particular function does not assume a Python environment; as a result,
+ * the error handling mechanism is different from Python-related functions.
+ *
+ * \param prototype The prototype DLTensor to offer details about the device and shape.
+ *                  Other field information will be ignored during allocation.
+ * \param out The output DLManagedTensorVersioned.
+ * \param error_ctx The context to set the error.
+ * \param SetError The function to set the error.
+ * \return 0 on success, -1 on failure.
+ *         The callee should call SetError(error_ctx, kind, message) to set the error kind and message.
+ * \note Error propagation via SetError.
+ */
+typedef int (*DLPackTensorAllocator)(                                       //
+  DLTensor* prototype, DLManagedTensorVersioned** out, void* error_ctx,     //
+  void (*SetError)(void* error_ctx, const char* kind, const char* message)  //
+);
+
+/*!
+ * \brief Exports a PyObject* Tensor/NDArray to a DLManagedTensorVersioned.
+ *
+ * This function is a C-style function pointer to quickly convert a PyObject* Tensor/NDArray
+ * to a DLManagedTensorVersioned without going through the Python Interpreter.
+ *
+ * It also provides an option to query the current context stream of the device provided
+ * by the tensor.
+ *
+ * Array/Tensor libraries can store this field as an int in the type of the Tensor/Array.
+ *
+ * mypackage.Tensor.__c_dlpack_from_pyobject__ = MyPackageDLPackFromPyObject
+ *
+ * This information can then be picked up by importers and libraries to run the speed conversion.
+ * This function should not throw any exceptions; if it fails, it should return -1 and
+ * set the error message via PyErr_SetXXX.
+ *
+ * \param py_object The Python object to convert; this should be PyObject*.
+ *                  We use void* to avoid dependency on Python.h.
+ * \param out The output DLManagedTensorVersioned.
+ * \param optional_out_env_stream Outputs the current context stream of the device provided
+ *                   by the tensor; it can be NULL, in which case the stream will not be queried.
+ * \return 0 on success, -1 on failure. PyError should be set if -1 is returned.
+ * \note We use void* to avoid dependency on Python.h, so this specific type is
+ *       not dependent on Python.h and can be copied to dlpack.h.
+ */
+typedef int (*DLPackFromPyObject)(                              //
+  void* py_object,                                              //
+  DLManagedTensorVersioned** out,                               //
+  void** optional_out_env_stream                                //
+);
+
+/*!
+ * \brief Imports a DLManagedTensorVersioned to a PyObject* Tensor/NDArray.
+ *
+ * This function is a C-style function pointer to quickly convert a DLManagedTensorVersioned
+ * to a PyObject* without going through the Python Interpreter.
+ *
+ * Array/Tensor libraries can store this field as an int in the type of the Tensor/Array.
+ *
+ * mypackage.Tensor.__c_dlpack_to_pyobject__ = MyPackageDLPackToPyObject
+ *
+ * \param tensor The DLManagedTensorVersioned to convert.
+ * \param out_py_object The output Python object.
+ * \return 0 on success, -1 on failure. PyError should be set if -1 is returned.
+ * \note We use void* to avoid dependency on Python.h, so this specific type is
+ *       not dependent on Python.h and can be copied to dlpack.h.
+ */
+typedef int (*DLPackToPyObject)(DLManagedTensorVersioned* tensor, void** out_py_object);
 
 #ifdef __cplusplus
 }  // DLPACK_EXTERN_C
