@@ -365,14 +365,11 @@ typedef struct DLManagedTensorVersioned {
 //--------------------------------------------------------------------
 // DLPack C functions for speed exchange
 //--------------------------------------------------------------------
-/*
+/*!
  * \brief A generic C-style allocator that exposes allocation of a Tensor/Array.
  *
- * Array/Tensor libraries can store this field as an int in the type of the Tensor/Array.
- *
- * mypackage.Tensor.__c_dlpack_tensor_allocator__ = MyPackageDLPackTensorAllocator
- *
  * This information can then be used to set allocators of a callee to run allocations.
+ * This function can be exposed by the framework through the DLPackExchangeAPI.
  *
  * This particular function does not assume a Python environment; as a result,
  * the error handling mechanism is different from Python-related functions.
@@ -385,6 +382,8 @@ typedef struct DLManagedTensorVersioned {
  * \return 0 on success, -1 on failure.
  *         The callee should call SetError(error_ctx, kind, message) to set the error kind and message.
  * \note Error propagation via SetError.
+ *
+ * \sa DLPackExchangeAPI
  */
 typedef int (*DLPackTensorAllocator)(                                       //
   DLTensor* prototype, DLManagedTensorVersioned** out, void* error_ctx,     //
@@ -400,9 +399,7 @@ typedef int (*DLPackTensorAllocator)(                                       //
  * It also provides an option to query the current context stream of the device provided
  * by the tensor.
  *
- * Array/Tensor libraries can store this field as an int in the type of the Tensor/Array.
- *
- * mypackage.Tensor.__c_dlpack_from_pyobject__ = MyPackageDLPackFromPyObject
+ * This function is exposed by the framework through the DLPackExchangeAPI.
  *
  * This information can then be picked up by importers and libraries to run the speed conversion.
  * This function should not throw any exceptions; if it fails, it should return -1 and
@@ -416,6 +413,8 @@ typedef int (*DLPackTensorAllocator)(                                       //
  * \return 0 on success, -1 on failure. PyError should be set if -1 is returned.
  * \note We use void* to avoid dependency on Python.h, so this specific type is
  *       not dependent on Python.h and can be copied to dlpack.h.
+ *
+ * \sa DLPackExchangeAPI
  */
 typedef int (*DLPackFromPyObject)(                              //
   void* py_object,                                              //
@@ -429,17 +428,70 @@ typedef int (*DLPackFromPyObject)(                              //
  * This function is a C-style function pointer to quickly convert a DLManagedTensorVersioned
  * to a PyObject* without going through the Python Interpreter.
  *
- * Array/Tensor libraries can store this field as an int in the type of the Tensor/Array.
- *
- * mypackage.Tensor.__c_dlpack_to_pyobject__ = MyPackageDLPackToPyObject
+ * This function is exposed by the framework through the DLPackExchangeAPI.
  *
  * \param tensor The DLManagedTensorVersioned to convert.
  * \param out_py_object The output Python object.
  * \return 0 on success, -1 on failure. PyError should be set if -1 is returned.
  * \note We use void* to avoid dependency on Python.h, so this specific type is
  *       not dependent on Python.h and can be copied to dlpack.h.
+ *
+ * \sa DLPackExchangeAPI
  */
 typedef int (*DLPackToPyObject)(DLManagedTensorVersioned* tensor, void** out_py_object);
+
+/*!
+ * \brief Framework-specific function pointers table for DLPack exchange.
+ *
+ * Array/Tensor librarie should statically create and initialize this structure
+ * then return a pointer to DLPackExchangeAPI as an int value in Tensor/Array.
+ * The DLPackExchangeAPI* should stay alive throughout the lifetime of process.
+ *
+ * One simple way to do so is to create a static instance of DLPackExchangeAPI
+ * within the framework and return a pointer to it, the following code
+ * shows an example to do so in c++. It should also be reasonably easy
+ * to do so in other languages.
+ *
+ * \code
+ * struct MyDLPackExchangeAPI : public DLPackExchangeAPI {
+ *   MyDLPackExchangeAPI() {
+ *     version.major = DLPACK_MAJOR_VERSION;
+ *     version.minor = DLPACK_MINOR_VERSION;
+ *     tensor_allocator = MyDLPackTensorAllocator;
+ *     dlpack_from_py_object = MyDLPackFromPyObject;
+ *     dlpack_to_py_object = MyDLPackToPyObject
+ *  }
+ *
+ *  const DLPackExchangeAPI* Global() {
+ *     static MyDLPackExchangeAPI inst;
+ *     return &inst;
+ *  }
+ * };
+ * \endcode
+ *
+ * mypackage.Tensor.__c_dlpack_exchange_api__ = MyPackageDLPackExchangeAPI
+ */
+struct DLPackExchangeAPI {
+  /*!
+   * \brief The current DLPack version.
+   */
+  DLPackVersion version;
+  /*!
+   * \brief Framework-specific function pointer for DLPackTensorAllocator
+   * \sa DLPackTensorAllocator
+   */
+  DLPackTensorAllocator tensor_allocator;
+  /*!
+   * \brief Framework-specific function pointer for DLPackFromPyObject
+   * \sa DLPackFromPyObject
+   */
+  DLPackFromPyObject dlpack_from_py_object;
+  /*!
+   * \brief Framework-specific function pointer for DLPackToPyObject
+   * \sa DLPackToPyObject
+   */
+  DLPackToPyObject dlpack_to_py_object;
+};
 
 #ifdef __cplusplus
 }  // DLPACK_EXTERN_C
