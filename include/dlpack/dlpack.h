@@ -407,7 +407,16 @@ typedef int (*DLPackManagedTensorAllocator)(                                //
  *
  * \param py_object The Python object to convert; this should be PyObject*.
  *                  We use void* to avoid dependency on Python.h.
+ *
+ * \param max_version The maximum version of DLPack support that consumer supports.
+ *                    Consumer should fill in their own version here, this parameter is not null.
+ *                    Producer can use this information to produce the appropriate
+ *                    DLManagedTensorVersioned for maximum compatibility if needed.
+ *                    This field is primarily used for future compatibility in case
+ *                    of major version bump and ABI-breaking changes.
+ *
  * \param out The output DLManagedTensorVersioned.
+ *
  * \param optional_out_env_stream Outputs the current context stream of the device provided
  *                   by the tensor; it can be NULL, in which case the stream will not be queried.
  *                   optional_out_env_stream should points to cudaStream_t in the case of CUDA.
@@ -420,6 +429,7 @@ typedef int (*DLPackManagedTensorAllocator)(                                //
  */
 typedef int (*DLPackManagedTensorFromPyObject)(                 //
   void* py_object,                                              //
+  const DLPackVersion* max_version,                             //
   DLManagedTensorVersioned** out,                               //
   void** optional_out_env_stream                                //
 );
