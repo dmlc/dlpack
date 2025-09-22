@@ -385,7 +385,7 @@ typedef struct DLManagedTensorVersioned {
  *
  * \sa DLPackExchangeAPI
  */
-typedef int (*DLPackTensorAllocator)(                                       //
+typedef int (*DLPackManagedTensorAllocator)(                                //
   DLTensor* prototype, DLManagedTensorVersioned** out, void* error_ctx,     //
   void (*SetError)(void* error_ctx, const char* kind, const char* message)  //
 );
@@ -410,13 +410,15 @@ typedef int (*DLPackTensorAllocator)(                                       //
  * \param out The output DLManagedTensorVersioned.
  * \param optional_out_env_stream Outputs the current context stream of the device provided
  *                   by the tensor; it can be NULL, in which case the stream will not be queried.
+ *                   optional_out_env_stream should points to cudaStream_t in the case of CUDA.
+ *
  * \return 0 on success, -1 on failure. PyError should be set if -1 is returned.
  * \note We use void* to avoid dependency on Python.h, so this specific type is
  *       not dependent on Python.h and can be copied to dlpack.h.
  *
  * \sa DLPackExchangeAPI
  */
-typedef int (*DLPackFromPyObject)(                              //
+typedef int (*DLPackManagedTensorFromPyObject)(                 //
   void* py_object,                                              //
   DLManagedTensorVersioned** out,                               //
   void** optional_out_env_stream                                //
@@ -438,7 +440,9 @@ typedef int (*DLPackFromPyObject)(                              //
  *
  * \sa DLPackExchangeAPI
  */
-typedef int (*DLPackToPyObject)(DLManagedTensorVersioned* tensor, void** out_py_object);
+typedef int (*DLPackManagedTensorToPyObject)(                     //
+  DLManagedTensorVersioned* tensor, void** out_py_object          //
+);
 
 /*!
  * \brief Framework-specific function pointers table for DLPack exchange.
@@ -457,19 +461,28 @@ typedef int (*DLPackToPyObject)(DLManagedTensorVersioned* tensor, void** out_py_
  *   MyDLPackExchangeAPI() {
  *     version.major = DLPACK_MAJOR_VERSION;
  *     version.minor = DLPACK_MINOR_VERSION;
- *     tensor_allocator = MyDLPackTensorAllocator;
- *     dlpack_from_py_object = MyDLPackFromPyObject;
- *     dlpack_to_py_object = MyDLPackToPyObject
+ *     managed_tensor_allocator = MyDLPackManagedTensorAllocator;
+ *     managed_tensor_from_py_object = MyDLPackManagedTensorFromPyObject;
+ *     managed_tensor_to_py_object = MyDLPackManagedTensorToPyObject
  *  }
  *
- *  const DLPackExchangeAPI* Global() {
+ *  static const DLPackExchangeAPI* Global() {
  *     static MyDLPackExchangeAPI inst;
  *     return &inst;
  *  }
  * };
  * \endcode
  *
+ * Each framework should attach a dunder `__c_dlpack_exchange_api__` integer
+ * to point to the pointer of the DLPackExchangeAPI*
+ *
+ * Importantly the attributed should be attached to the class of the Tensor, not the instance.
+ *
  * mypackage.Tensor.__c_dlpack_exchange_api__ = MyPackageDLPackExchangeAPI
+ *
+ * or equivalently:
+ *
+ * type(tensor_obj).__c_dlpack_exchange_api__ = MyPackageDLPackExchangeAPI
  */
 struct DLPackExchangeAPI {
   /*!
@@ -477,20 +490,20 @@ struct DLPackExchangeAPI {
    */
   DLPackVersion version;
   /*!
-   * \brief Framework-specific function pointer for DLPackTensorAllocator
-   * \sa DLPackTensorAllocator
+   * \brief Framework-specific function pointer for DLPackManagedTensorAllocator
+   * \sa DLPackManagedTensorAllocator
    */
-  DLPackTensorAllocator tensor_allocator;
+  DLPackManagedTensorAllocator managed_tensor_allocator;
   /*!
-   * \brief Framework-specific function pointer for DLPackFromPyObject
-   * \sa DLPackFromPyObject
+   * \brief Framework-specific function pointer for DLPackManagedTensorFromPyObject
+   * \sa DLPackManagedTensorFromPyObject
    */
-  DLPackFromPyObject dlpack_from_py_object;
+  DLPackManagedTensorFromPyObject managed_tensor_from_py_object;
   /*!
-   * \brief Framework-specific function pointer for DLPackToPyObject
-   * \sa DLPackToPyObject
+   * \brief Framework-specific function pointer for DLPackManagedTensorToPyObject
+   * \sa DLPackManagedTensorToPyObject
    */
-  DLPackToPyObject dlpack_to_py_object;
+  DLPackManagedTensorToPyObject managed_tensor_to_py_object;
 };
 
 #ifdef __cplusplus
