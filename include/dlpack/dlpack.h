@@ -362,57 +362,51 @@ typedef struct DLManagedTensorVersioned {
   DLTensor dl_tensor;
 } DLManagedTensorVersioned;
 
-//--------------------------------------------------------------------
-// DLPack C functions for speed exchange
-//--------------------------------------------------------------------
+//----------------------------------------------------------------------
+// DLPack `__c_dlpack_exchange_api__` fast exchange protocol definitions
+//----------------------------------------------------------------------
 /*!
- * \brief A generic C-style allocator that exposes allocation of a Tensor/Array.
+ * \brief Request a producer library to create a new tensor.
  *
- * This information can then be used to set allocators of a callee to run allocations.
- * This information can then be used to set the callee's allocator to perform allocations.
- * This function can be exposed by the framework through the DLPackExchangeAPI.
+ * Create a new `DLManagedTensorVersioned` within the context of the producer
+ * library. The allocation is defined via the prototype DLTensor.
  *
- * This particular function does not assume a Python environment; as a result,
- * the error handling mechanism is different from Python-related functions.
+ * This function is exposed by the framework through the DLPackExchangeAPI.
  *
- * \param prototype The prototype DLTensor to offer details about the device and shape.
- *                  Other field information will be ignored during allocation.
+ * \param prototype The prototype DLTensor. Only the dtype, ndim, shape,
+ *        and device fields are used.
  * \param out The output DLManagedTensorVersioned.
- * \param error_ctx The context to set the error.
+ * \param error_ctx Context for `SetError`.
  * \param SetError The function to set the error.
- * \return 0 on success, -1 on failure.
- *         The callee should call SetError(error_ctx, kind, message) to set the error kind and message.
- * \note Error propagation via SetError.
+ * \return The owning DLManagedTensorVersioned* or NULL on failure.
+ *         SetError is called exactly when NULL is returned (the implementor
+ *         must ensure this).
+ * \note - As a C function, must not thrown C++ exceptions.
+ *       - Error propagation via SetError to avoid any direct need
+ *         of Python API. Due to this `SetError` may have to ensure the GIL is
+ *         held since it will presumably set a Python error.
  *
  * \sa DLPackExchangeAPI
  */
-typedef int (*DLPackManagedTensorAllocator)(                                //
-  DLTensor* prototype, DLManagedTensorVersioned** out, void* error_ctx,     //
-  void (*SetError)(void* error_ctx, const char* kind, const char* message)  //
+typedef int (*DLPackManagedTensorAllocator)(                                         //
+  DLTensor* prototype, DLManagedTensorVersioned** out, void* error_ctx,              //
+  void (*SetError)(void* error_ctx, const char* kind, const char* message)           //
 );
 
 /*!
  * \brief Exports a PyObject* Tensor/NDArray to a DLManagedTensorVersioned.
- *
- * This function is a C-style function pointer to quickly convert a PyObject* Tensor/NDArray
- * to a DLManagedTensorVersioned without going through the Python interpreter.
  *
  * This function does not perform any stream synchronization. The consumer should query
  * DLPackCurrentWorkStream to get the current work stream and launch kernels on it.
  *
  * This function is exposed by the framework through the DLPackExchangeAPI.
  *
- * This information can then be picked up by importers and libraries to perform a fast conversion.
- * This function should not throw any exceptions; if it fails, it should return -1 and
- * set the error message via PyErr_SetXXX.
- *
- * \param py_object The Python object to convert; this should be PyObject*.
- *                  We use void* to avoid dependency on Python.h.
- *
- * \param out The output DLManagedTensorVersioned.
- * \return 0 on success, -1 on failure. PyError should be set if -1 is returned.
- * \note We use void* to avoid dependency on Python.h, so this specific type is
- *       not dependent on Python.h and can be copied to dlpack.h.
+ * \param py_object The Python object to convert. Must have the same type
+ *        as the one the `DLPackExchangeAPI` was discovered from.
+ * \return The owning DLManagedTensorVersioned* or NULL on failure with a
+ *         Python exception set. If the data cannot be described using DLPack
+ *         this should be a BufferError if possible.
+ * \note - As a C function, must not thrown C++ exceptions.
  *
  * \sa DLPackExchangeAPI, DLPackCurrentWorkStream
  */
@@ -422,38 +416,26 @@ typedef int (*DLPackManagedTensorFromPyObjectNoSync)(                 //
 );
 
 /*!
- * \brief Exports a PyObject* Tensor/NDArray to a DLTensor whose space is pre-allocated on stack.
+ * \brief Exports a PyObject* Tensor/NDArray to a provided DLTensor.
  *
- * This function is a C-style function pointer to quickly convert a PyObject* Tensor/NDArray
- * to a DLTensor whose space is pre-allocated on stack without going through the Python interpreter.
+ * This function provides a faster interface for temporary, non-owning, exchange.
+ * The producer (implementor) still owns the memory of data, strides, shape.
+ * The liveness of the DLTensor and the data it views is only guaranteed until
+ * control is returned.
  *
- * This is an non-owning conversion, the producer still owns the memory of data, strides, shape.
- * The liveness of DLTensor is only guaranteed until the consumer returns control to the caller.
- *
- * In the context of this function, we expect the producer to allocated space for data, strides and shape.
+ * This function currently assumes that the producer (implementor) can fill
+ * in the DLTensor shape and strides without the need for temporary allocations.
  *
  * This function does not perform any stream synchronization. The consumer should query
  * DLPackCurrentWorkStream to get the current work stream and launch kernels on it.
  *
- * This function is useful when the consumer do not need to retain the tensor memory.
- * It generally can provide about 2x faster conversion than DLPackManagedTensorFromPyObjectNoSync.
- *
- * For cases where consumer may needs to reorganize the tensor memory via temporary managed copy,
- * DLPackManagedTensorFromPyObjectNoSync should be used.
- *
  * This function is exposed by the framework through the DLPackExchangeAPI.
  *
- * This information can then be picked up by importers and libraries to perform a fast conversion.
- * This function should not throw any exceptions; if it fails, it should return -1 and
- * set the error message via PyErr_SetXXX.
- *
- * \param py_object The Python object to convert; this should be PyObject*.
- *                  We use void* to avoid dependency on Python.h.
- *
+ * \param py_object The Python object to convert. Must have the same type
+ *        as the one the `DLPackExchangeAPI` was discovered from.
  * \param out The output DLTensor, whose space is pre-allocated on stack.
- * \return 0 on success, -1 on failure. PyError should be set if -1 is returned.
- * \note We use void* to avoid dependency on Python.h, so this specific type is
- *       not dependent on Python.h and can be copied to dlpack.h.
+ * \return 0 on success, -1 on failure with a Python exception set.
+ * \note - As a C function, must not thrown C++ exceptions.
  *
  * \sa DLPackExchangeAPI, DLPackCurrentWorkStream
  */
@@ -465,21 +447,21 @@ typedef int (*DLPackDLTensorFromPyObjectNoSync)(                      //
 /*!
  * \brief Obtain the current work stream of a device.
  *
- * This function is a C-style function pointer to obtain the current work stream
- * of a device for frameworks that rely on a context manager to manage the stream.
+ * Obtain the current work stream of a device from the producer framework.
  * For example, it should map to torch.cuda.current_stream in PyTorch.
  *
- * This function can be set to NULL if the framework does not rely on a context manager
- * to manage the stream. However, we encourage frameworks to provide this function
- * if possible.
- *
- * As if this field is not set, likely consumer cannot safely do stream based
- * exchange based on the
+ * When device_type is kDLCPU, the consumer do not have to query the stream
+ * and the producer can simply return NULL when queried.
+ * The consumer do not have to do anything on stream sync or setting.
+ * So CPU only framework can just provide a dummy implementation that
+ * always set out_current_stream[0] to NULL.
  *
  * \param device_type The device type.
  * \param device_id The device id.
  * \param out_current_stream The output current work stream.
- * \return 0 on success, -1 on failure.
+ *
+ * \return 0 on success, -1 on failure with a Python exception set.
+ * \note - As a C function, must not thrown C++ exceptions.
  *
  * \sa DLPackExchangeAPI
  */
@@ -492,54 +474,47 @@ typedef int (*DLPackCurrentWorkStream)(                         //
 /*!
  * \brief Imports a DLManagedTensorVersioned to a PyObject* Tensor/NDArray.
  *
- * This function is a C-style function pointer to quickly convert a DLManagedTensorVersioned
- * to a PyObject* without going through the Python Interpreter.
+ * Convert an owning DLManagedTensorVersioned* to the Python tensor of the
+ * producer (implementor) library with the correct type.
  *
  * This function does not perform any stream synchronization.
  *
  * This function is exposed by the framework through the DLPackExchangeAPI.
  *
- * \param tensor The DLManagedTensorVersioned to convert.
+ * \param tensor The DLManagedTensorVersioned to convert the ownership of the
+ *        the data is stolen.
  * \param out_py_object The output Python object.
- * \return 0 on success, -1 on failure. PyError should be set if -1 is returned.
- * \note We use void* to avoid dependency on Python.h, so this specific type is
- *       not dependent on Python.h and can be copied to dlpack.h.
+ * \return 0 on success, -1 on failure with a Python exception set.
  *
  * \sa DLPackExchangeAPI
  */
-typedef int (*DLPackManagedTensorToPyObjectNoSync)(                     //
-  DLManagedTensorVersioned* tensor, void** out_py_object                //
+typedef int (*DLPackManagedTensorToPyObjectNoSync)(                //
+  DLManagedTensorVersioned* tensor,                                //
+  void** out_py_object                                             //
 );
 
 /*!
  * \brief Framework-specific function pointers table for DLPack exchange.
  *
- * Guidelines for leveraging DLPackExchangeAPI:
+ * Additionally to `__dlpack__()` we define a C function table sharable by
+ * Python implementations via `__c_dlpack_exchange_api__`.
+ * This attribute must be set on the type as a Python integer compatible
+ * with `PyLong_FromVoidPtr`/`PyLong_AsVoidPtr`.
  *
- * There are generally two kinds of consumer needs for DLPack exchange:
- * - N0: library support, where consumer.kernel(x, y, z) would like to run a kernel
- *       with the data from x, y, z. The consumer is also expected to run the kernel with the same
- *       stream context as the producer. For example, when x, y, z is torch.Tensor,
- *       consumer should query exchange_api->current_work_stream to get the
- *       current stream and launch the kernel with the same stream.
- *       This setup is necessary for no synchronization in kernel launch and maximum compatibility
- *       with CUDA graph capture in the producer.
- *       This is the desirable behavior for library extension support for frameworks like PyTorch.
- * - N1: data ingestion and retention
+ * A consumer library may use a pattern such as:
  *
- * Note that obj.__dlpack__() API should provide useful ways for N1.
- * The primary focus of the current DLPackExchangeAPI is to enable faster exchange N0
- * with the support of the function pointer current_work_stream.
+ * \code
  *
- * Array/Tensor libraries should statically create and initialize this structure
- * then return a pointer to DLPackExchangeAPI as an int value in Tensor/Array.
- * The DLPackExchangeAPI* should stay alive throughout the lifetime of the process.
+ * PyObject *api_obj = type(tensor_obj).__c_dlpack_exchange_api__;  // as C-code
+ * MyDLPackExchangeAPI *api = PyLong_AsVoidPtr(api_obj);
+ * if (api == NULL && PyErr_Occurred()) { goto handle_error; }
  *
- * One simple way to do so is to create a static instance of DLPackExchangeAPI
- * within the framework and return a pointer to it. The following code
- * shows an example to do so in C++. It should also be reasonably easy
- * to do so in other languages.
+ * \endcode
  *
+ * Note that this must be defined on the type. The consumer should look up the
+ * attribute on the type and may cache the result for each unique type.
+ *
+ * The precise API table is given by:
  * \code
  * struct MyDLPackExchangeAPI : public DLPackExchangeAPI {
  *   MyDLPackExchangeAPI() {
@@ -560,55 +535,75 @@ typedef int (*DLPackManagedTensorToPyObjectNoSync)(                     //
  * };
  * \endcode
  *
- * Each framework should attach a dunder `__c_dlpack_exchange_api__` integer
- * to point to the DLPackExchangeAPI* pointer.
+ * Guidelines for leveraging DLPackExchangeAPI:
  *
- * Importantly, the attribute should be attached to the class of the Tensor, not the instance.
+ * There are generally two kinds of consumer needs for DLPack exchange:
+ * - N0: library support, where consumer.kernel(x, y, z) would like to run a kernel
+ *       with the data from x, y, z. The consumer is also expected to run the kernel with the same
+ *       stream context as the producer. For example, when x, y, z is torch.Tensor,
+ *       consumer should query exchange_api->current_work_stream to get the
+ *       current stream and launch the kernel with the same stream.
+ *       This setup is necessary for no synchronization in kernel launch and maximum compatibility
+ *       with CUDA graph capture in the producer.
+ *       This is the desirable behavior for library extension support for frameworks like PyTorch.
+ * - N1: data ingestion and retention
  *
- * mypackage.Tensor.__c_dlpack_exchange_api__ = MyPackageDLPackExchangeAPI
+ * Note that obj.__dlpack__() API should provide useful ways for N1.
+ * The primary focus of the current DLPackExchangeAPI is to enable faster exchange N0
+ * with the support of the function pointer current_work_stream.
  *
- * or equivalently:
+ * Array/Tensor libraries should statically create and initialize this structure
+ * then return a pointer to DLPackExchangeAPI as an int value in Tensor/Array.
+ * The DLPackExchangeAPI* must stay alive throughout the lifetime of the process.
  *
- * type(tensor_obj).__c_dlpack_exchange_api__ = MyPackageDLPackExchangeAPI
+ * One simple way to do so is to create a static instance of DLPackExchangeAPI
+ * within the framework and return a pointer to it. The following code
+ * shows an example to do so in C++. It should also be reasonably easy
+ * to do so in other languages.
  */
 struct DLPackExchangeAPI {
   /*!
-   * \brief The current DLPack version.
+   * \brief The provided DLPack version the consumer must check major version
+   *        compatibility before using this struct.
    */
   DLPackVersion version;
   /*!
    * \brief Optional pointer to an older DLPackExchangeAPI in the chain.
    *
-   * It should be set to NULL if the framework does not support older versions.
+   * It must be NULL if the framework does not support older versions.
+   * If the current major version is larger than the one supported by the
+   * consumer, the consumer may walk this to find an earlier supported version.
    *
    * \sa DLPackExchangeAPI
    */
   struct DLPackExchangeAPI* prev_version_api;
   /*!
-   * \brief Framework-specific function pointer for DLPackManagedTensorAllocator
+   * \brief Producer function pointer for DLPackManagedTensorAllocator
+   *        This function must be not NULL.
    * \sa DLPackManagedTensorAllocator
    */
   DLPackManagedTensorAllocator managed_tensor_allocator;
   /*!
-   * \brief Framework-specific function pointer for DLPackManagedTensorFromPyObject
+   * \brief Producer function pointer for DLPackManagedTensorFromPyObject
+   *        This function must be not NULL.
    * \sa DLPackManagedTensorFromPyObject
    */
   DLPackManagedTensorFromPyObjectNoSync managed_tensor_from_py_object_no_sync;
   /*!
-   * \brief Framework-specific function pointer for DLPackManagedTensorToPyObject
+   * \brief Producer function pointer for DLPackManagedTensorToPyObject
+   *        This function must be not NULL.
    * \sa DLPackManagedTensorToPyObject
    */
   DLPackManagedTensorToPyObjectNoSync managed_tensor_to_py_object_no_sync;
   /*!
-   * \brief Framework-specific function pointer for DLPackDLTensorFromPyObject
+   * \brief Producer function pointer for DLPackDLTensorFromPyObject
+   *        This function can be NULL when the producer does not support this function.
    * \sa DLPackDLTensorFromPyObjectNoSync
    */
   DLPackDLTensorFromPyObjectNoSync dltensor_from_py_object_no_sync;
   /*!
-   * \brief Framework-specific function pointer for DLPackCurrentWorkStream
-   *
-   * This function can be set to NULL if the framework does not rely on context manager to manage the stream.
-   *
+   * \brief Producer function pointer for DLPackCurrentWorkStream
+   *        This function must be not NULL.
    * \sa DLPackCurrentWorkStream
    */
   DLPackCurrentWorkStream current_work_stream;
