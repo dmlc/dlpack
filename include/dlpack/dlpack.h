@@ -482,7 +482,7 @@ typedef int (*DLPackCurrentWorkStream)(                         //
  * This function is exposed by the framework through the DLPackExchangeAPI.
  *
  * \param tensor The DLManagedTensorVersioned to convert the ownership of the
- *        the data is stolen.
+ *        tensor is stolen.
  * \param out_py_object The output Python object.
  * \return 0 on success, -1 on failure with a Python exception set.
  *
