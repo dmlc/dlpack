@@ -257,8 +257,9 @@ typedef struct {
   /*! \brief The shape of the tensor */
   int64_t* shape;
   /*!
-   * \brief strides of the tensor (in number of elements, not bytes)
-   *  can be NULL, indicating tensor is compact and row-majored.
+   * \brief strides of the tensor (in number of elements, not bytes),
+   *  can not be NULL if ndim != 0, must points to
+   *  an array of ndim elements that specifies the strides.
    */
   int64_t* strides;
   /*! \brief The offset in bytes to the beginning pointer to data */
