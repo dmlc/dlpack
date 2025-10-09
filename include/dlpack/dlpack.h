@@ -579,7 +579,7 @@ struct DLPackExchangeAPI {
   struct DLPackExchangeAPI* prev_version_api;
   /*!
    * \brief Producer function pointer for DLPackManagedTensorAllocator
-   *        This function must be not NULL.
+   *        This function must not be NULL.
    * \sa DLPackManagedTensorAllocator
    */
   DLPackManagedTensorAllocator managed_tensor_allocator;
