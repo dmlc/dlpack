@@ -269,8 +269,7 @@ typedef struct {
    *
    *  \note Before DLPack v1.2, strides can be NULL to indicate contiguous data.
    *        This is not allowed in DLPack v1.2 and later. The rationale
-   *        is to simplify the consumer hanlding, and most frameworks already
-   *        always returns the strides when ndim != 0.
+   *        is to simplify the consumer handling.
    */
   int64_t* strides;
   /*! \brief The offset in bytes to the beginning pointer to data */
