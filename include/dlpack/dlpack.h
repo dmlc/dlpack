@@ -254,12 +254,23 @@ typedef struct {
   int32_t ndim;
   /*! \brief The data type of the pointer*/
   DLDataType dtype;
-  /*! \brief The shape of the tensor */
+  /*!
+   * \brief The shape of the tensor
+   *
+   *  When ndim == 0, we suggest to set the shape to NULL.
+   */
   int64_t* shape;
   /*!
    * \brief strides of the tensor (in number of elements, not bytes),
    *  can not be NULL if ndim != 0, must points to
    *  an array of ndim elements that specifies the strides.
+   *
+   *  When ndim == 0, we suggest to set the strides to NULL.
+   *
+   *  \note Before DLPack v1.2, strides can be NULL to indicate contiguous data.
+   *        This is not allowed in DLPack v1.2 and later. The rationale
+   *        is to simplify the consumer hanlding, and most frameworks already
+   *        always returns the strides when ndim != 0.
    */
   int64_t* strides;
   /*! \brief The offset in bytes to the beginning pointer to data */
