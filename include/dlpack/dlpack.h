@@ -494,6 +494,28 @@ typedef int (*DLPackManagedTensorToPyObjectNoSync)(                //
 );
 
 /*!
+ * \brief DLPackExchangeAPI stable header.
+ * \sa DLPackExchangeAPI
+ */
+typedef struct DLPackExchangeAPIHeader {
+  /*!
+   * \brief The provided DLPack version the consumer must check major version
+   *        compatibility before using this struct.
+   */
+  DLPackVersion version;
+  /*!
+   * \brief Optional pointer to an older DLPackExchangeAPI in the chain.
+   *
+   * It must be NULL if the framework does not support older versions.
+   * If the current major version is larger than the one supported by the
+   * consumer, the consumer may walk this to find an earlier supported version.
+   *
+   * \sa DLPackExchangeAPI
+   */
+  struct DLPackExchangeAPIHeader* prev_version_api;
+} DLPackExchangeAPIHeader;
+
+/*!
  * \brief Framework-specific function pointers table for DLPack exchange.
  *
  * Additionally to `__dlpack__()` we define a C function table sharable by
@@ -518,14 +540,15 @@ typedef int (*DLPackManagedTensorToPyObjectNoSync)(                //
  * \code
  * struct MyDLPackExchangeAPI : public DLPackExchangeAPI {
  *   MyDLPackExchangeAPI() {
- *     version.major = DLPACK_MAJOR_VERSION;
- *     version.minor = DLPACK_MINOR_VERSION;
+ *     header.version.major = DLPACK_MAJOR_VERSION;
+ *     header.version.minor = DLPACK_MINOR_VERSION;
+ *     header.prev_version_api = nullptr;
+ *
  *     managed_tensor_allocator = MyDLPackManagedTensorAllocator;
  *     managed_tensor_from_py_object_no_sync = MyDLPackManagedTensorFromPyObjectNoSync;
  *     managed_tensor_to_py_object_no_sync = MyDLPackManagedTensorToPyObjectNoSync;
  *     dltensor_from_py_object_no_sync = MyDLPackDLTensorFromPyObjectNoSync;
  *     current_work_stream = MyDLPackCurrentWorkStream;
- *     prev_version_api = nullptr;
  *  }
  *
  *  static const DLPackExchangeAPI* Global() {
@@ -561,22 +584,11 @@ typedef int (*DLPackManagedTensorToPyObjectNoSync)(                //
  * shows an example to do so in C++. It should also be reasonably easy
  * to do so in other languages.
  */
-struct DLPackExchangeAPI {
+typedef struct DLPackExchangeAPI {
   /*!
-   * \brief The provided DLPack version the consumer must check major version
-   *        compatibility before using this struct.
+   * \brief The header that remains stable across versions.
    */
-  DLPackVersion version;
-  /*!
-   * \brief Optional pointer to an older DLPackExchangeAPI in the chain.
-   *
-   * It must be NULL if the framework does not support older versions.
-   * If the current major version is larger than the one supported by the
-   * consumer, the consumer may walk this to find an earlier supported version.
-   *
-   * \sa DLPackExchangeAPI
-   */
-  struct DLPackExchangeAPI* prev_version_api;
+  DLPackExchangeAPIHeader header;
   /*!
    * \brief Producer function pointer for DLPackManagedTensorAllocator
    *        This function must not be NULL.
@@ -607,7 +619,7 @@ struct DLPackExchangeAPI {
    * \sa DLPackCurrentWorkStream
    */
   DLPackCurrentWorkStream current_work_stream;
-};
+} DLPackExchangeAPI;
 
 #ifdef __cplusplus
 }  // DLPACK_EXTERN_C
