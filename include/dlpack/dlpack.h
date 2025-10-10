@@ -19,7 +19,7 @@
 #define DLPACK_MAJOR_VERSION 1
 
 /*! \brief The current minor version of dlpack */
-#define DLPACK_MINOR_VERSION 1
+#define DLPACK_MINOR_VERSION 2
 
 /*! \brief DLPACK_DLL prefix for windows */
 #ifdef _WIN32
@@ -257,15 +257,16 @@ typedef struct {
   /*!
    * \brief The shape of the tensor
    *
-   *  When ndim == 0, we suggest to set the shape to NULL.
+   *  When ndim == 0, shape can be set to NULL.
    */
   int64_t* shape;
   /*!
    * \brief strides of the tensor (in number of elements, not bytes),
    *  can not be NULL if ndim != 0, must points to
-   *  an array of ndim elements that specifies the strides.
+   *  an array of ndim elements that specifies the strides,
+   *  so consumer can always rely on strides[dim] being valid for 0 <= dim < ndim.
    *
-   *  When ndim == 0, we suggest to set the strides to NULL.
+   *  When ndim == 0, strides can be set to NULL.
    *
    *  \note Before DLPack v1.2, strides can be NULL to indicate contiguous data.
    *        This is not allowed in DLPack v1.2 and later. The rationale
