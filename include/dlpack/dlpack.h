@@ -512,7 +512,7 @@ typedef struct DLPackExchangeAPIHeader {
    *
    * \sa DLPackExchangeAPI
    */
-  struct DLPackExchangeAPIHeader* prev_version_api;
+  struct DLPackExchangeAPIHeader* prev_api;
 } DLPackExchangeAPIHeader;
 
 /*!
