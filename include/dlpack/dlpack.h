@@ -415,6 +415,7 @@ typedef int (*DLPackManagedTensorAllocator)(                                    
  *
  * \param py_object The Python object to convert. Must have the same type
  *        as the one the `DLPackExchangeAPI` was discovered from.
+ * \param out The output DLManagedTensorVersioned.
  * \return The owning DLManagedTensorVersioned* or NULL on failure with a
  *         Python exception set. If the data cannot be described using DLPack
  *         this should be a BufferError if possible.
@@ -616,7 +617,7 @@ typedef struct DLPackExchangeAPI {
   /*!
    * \brief Producer function pointer for DLPackManagedTensorToPyObject
    *        This function must be not NULL.
-   * \sa DLPackManagedTensorToPyObject
+   * \sa DLPackManagedTensorToPyObjectNoSync
    */
   DLPackManagedTensorToPyObjectNoSync managed_tensor_to_py_object_no_sync;
   /*!

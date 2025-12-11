@@ -27,6 +27,17 @@ Enumerations
 
 .. doxygenenum:: DLDataTypeCode
 
+
+Typedefs
+~~~~~~~~
+
+.. doxygentypedef:: DLPackManagedTensorAllocator
+.. doxygentypedef:: DLPackManagedTensorFromPyObjectNoSync
+.. doxygentypedef:: DLPackManagedTensorToPyObjectNoSync
+.. doxygentypedef:: DLPackDLTensorFromPyObjectNoSync
+.. doxygentypedef:: DLPackCurrentWorkStream
+
+
 Structs
 ~~~~~~~
 
@@ -46,4 +57,10 @@ Structs
    :members:
 
 .. doxygenstruct:: DLManagedTensorVersioned
+   :members:
+
+.. doxygenstruct:: DLPackExchangeAPIHeader
+   :members:
+
+.. doxygenstruct:: DLPackExchangeAPI
    :members:
