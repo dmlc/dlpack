@@ -179,6 +179,42 @@ refer to `github.com/dmlc/dlpack <https://github.com/dmlc/dlpack>`_.
    guaranteed to be in a certain order or not.
 
 
+DLPack C Exchange API
+~~~~~~~~~~~~~~~~~~~~~
+
+Starting with DLPack 1.3, a new C Exchange API is introduced to enable faster
+data exchange than the Python ``__dlpack__`` API at the C extension level.
+Producer array frameworks must provide a ``__dlpack_c_exchange_api__``
+attribute on the array type.
+The attribute should be a ``PyCapsule`` with name ``"dlpack_exchange_api"``.
+The consumer can query whether this attribute exists and use it at the C extension level.
+Notably, consumer frameworks can always start implementing by only using the Python ``__dlpack__`` API,
+and then upgrade to the C Exchange API later when faster data exchange is needed.
+
+.. code-block:: C
+
+   PyObject *api_obj = type(tensor_obj).__dlpack_c_exchange_api__;  // as C code.
+   MyDLPackExchangeAPI *api = PyCapsule_GetPointer(api_obj, "dlpack_exchange_api");
+   if (api == NULL && PyErr_Occurred()) { goto handle_error; }
+
+
+.. note:: Implementation of the C Exchange API
+
+   Producer framework should implement the C Exchange API in a static way either
+   through Cython, Python C extensions, or Python binding mechanism. Importantly,
+   because the DLPack C exchange API operates at the C extension level, we need
+   direct interaction between the array framework PyObject* and DLPack,
+   as a result it is harder to implement the C Exchange API through ctypes (because
+   ctypes releases GIL by default and sometimes in non-free-threading environment,
+   GIL is needed to interact with the Python C API).
+
+A reference implementations of the C Exchange API in frameworks:
+
+
+* PyTorch: `C++ <https://github.com/pytorch/pytorch/blob/main/torch/csrc/Module.cpp#L692>`__
+* Paddle: `C++ <https://github.com/PaddlePaddle/Paddle/blob/develop/paddle/fluid/pybind/pybind.cc#L856>`__
+
+
 Reference Implementations
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -198,3 +234,4 @@ ctypes, cffi, etc:
 * mpi4py: `Cython <https://github.com/mpi4py/mpi4py/blob/master/src/mpi4py/MPI.src/asdlpack.pxi>`_
 * Paddle: `C++ <https://github.com/PaddlePaddle/Paddle/blob/develop/paddle/fluid/framework/tensor_util.cc#L901-L951>`__, `Python wrapper using Python C API <https://github.com/PaddlePaddle/Paddle/blob/develop/paddle/fluid/pybind/pybind.cc#L1263-L1280>`__
 * Hidet: `ctypes <https://github.com/hidet-org/hidet/blob/main/python/hidet/graph/impl/dlpack.py>`__
+
