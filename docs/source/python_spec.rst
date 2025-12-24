@@ -203,7 +203,7 @@ and then upgrade to the C Exchange API later when faster data exchange is needed
    Producer framework should implement the C Exchange API in a static way either
    through Cython, Python C extensions, or Python binding mechanism. Importantly,
    because the DLPack C exchange API operates at the C extension level, we need
-   direct interaction between the array framework PyObject* and DLPack,
+   direct interaction between the array framework ``PyObject*`` and DLPack,
    as a result it is harder to implement the C Exchange API through ctypes (because
    ctypes releases GIL by default and sometimes in non-free-threading environment,
    GIL is needed to interact with the Python C API).
