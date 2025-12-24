@@ -184,7 +184,7 @@ DLPack C Exchange API
 
 Starting with DLPack 1.3, a new C Exchange API is introduced to enable faster
 data exchange than the Python ``__dlpack__`` API at the C extension level.
-Producer array frameworks must provide a ``__dlpack_c_exchange_api__``
+Producer array frameworks may provide a ``__dlpack_c_exchange_api__``
 attribute on the array type.
 The attribute should be a ``PyCapsule`` with name ``"dlpack_exchange_api"``.
 The consumer can query whether this attribute exists and use it at the C extension level.
