@@ -193,9 +193,12 @@ and then upgrade to the C Exchange API later when faster data exchange is needed
 
 .. code-block:: C
 
-   PyObject *api_obj = type(tensor_obj).__dlpack_c_exchange_api__;  // as C code.
-   MyDLPackExchangeAPI *api = PyCapsule_GetPointer(api_obj, "dlpack_exchange_api");
-   if (api == NULL && PyErr_Occurred()) { goto handle_error; }
+   // Get type, fetch capsule attribute, and extract the C struct pointer
+   PyObject *api_capsule = PyObject_GetAttrString((PyObject *)Py_TYPE(tensor_obj), "__dlpack_c_exchange_api__");
+   if (api_capsule == NULL) { goto handle_error; }
+   MyDLPackExchangeAPI *api = (MyDLPackExchangeAPI *)PyCapsule_GetPointer(api_capsule, "dlpack_exchange_api");
+   Py_DECREF(api_capsule);
+   if (api == NULL) { goto handle_error; }
 
 
 .. note:: Implementation of the C Exchange API
