@@ -214,8 +214,8 @@ and then upgrade to the C Exchange API later when faster data exchange is needed
 A reference implementations of the C Exchange API in frameworks:
 
 
-* PyTorch: `C++ <https://github.com/pytorch/pytorch/blob/main/torch/csrc/Module.cpp#L692>`__
-* Paddle: `C++ <https://github.com/PaddlePaddle/Paddle/blob/develop/paddle/fluid/pybind/pybind.cc#L856>`__
+* PyTorch: `C++ <https://github.com/pytorch/pytorch/tree/8da5d29de7feb165047246464d09c4c2b2318987/torch/csrc/Module.cpp#L692>`__
+* Paddle: `C++ <https://github.com/PaddlePaddle/Paddle/tree/6f808ba7d4742305a3a84de5cd299b8b76adfe5c/paddle/fluid/pybind/pybind.cc#L856>`__
 
 
 Reference Implementations
