@@ -220,8 +220,8 @@ typedef struct {
 typedef struct {
   /*!
    * \brief The data pointer points to the allocated data. This will be CUDA
-   * device pointer or cl_mem handle in OpenCL. It may be opaque on some device
-   * types. This pointer is always aligned to 256 bytes as in CUDA. The
+   * device pointer, cl_mem handle in OpenCL, or id<MTLBuffer> for Metal. It
+   * may be opaque on some device types. This pointer is always aligned to 256 bytes as in CUDA. The
    * `byte_offset` field should be used to point to the beginning of the data.
    *
    * Note that as of Nov 2021, multiple libraries (CuPy, PyTorch, TensorFlow,
