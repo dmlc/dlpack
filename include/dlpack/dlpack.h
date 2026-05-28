@@ -182,7 +182,7 @@ typedef enum {
   /*! \brief complex number (2x bfloat16)
    * (C/C++/Python layout: same as kDLComplex, compact struct per complex number)
    */
-  kDLBComplex = 18U,
+  kDLBcomplex = 18U,
 } DLDataTypeCode;
 
 /*!
