@@ -179,6 +179,10 @@ typedef enum {
    * while the consumer must stop importing if the value is unexpected.
    */
   kDLFloat4_e2m1fn = 17U,
+  /*! \brief complex number (2x bfloat16)
+   * (C/C++/Python layout: same as kDLComplex, compact struct per complex number)
+   */
+  kDLBcomplex = 18U,
 } DLDataTypeCode;
 
 /*!
@@ -191,6 +195,8 @@ typedef enum {
  *   - float4(vectorized 4 float): type_code = 2, bits = 32, lanes = 4
  *   - int8: type_code = 0, bits = 8, lanes = 1
  *   - std::complex<float>: type_code = 5, bits = 64, lanes = 1
+ *   - std::complex<std::float16_t>: type_code = 5, bits = 32, lanes = 1
+ *   - std::complex<std::bfloat16_t>: type_code = 18, bits = 32, lanes = 1
  *   - bool: type_code = 6, bits = 8, lanes = 1 (as per common array library convention, the underlying storage size of bool is 8 bits)
  *   - float8_e4m3: type_code = 8, bits = 8, lanes = 1 (packed in memory)
  *   - float6_e3m2fn: type_code = 16, bits = 6, lanes = 1 (packed in memory)
