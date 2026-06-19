@@ -120,6 +120,10 @@ typedef enum {
   kDLMAIA = 17,
   /*! \brief AWS Trainium */
   kDLTrn = 18,
+  /*! \brief Google TPU device */
+  kDLTPU = 19,
+  /*! \brief Google TPU Host device (pinned memory) */
+  kDLTPUHost = 20,
 } DLDeviceType;
 
 /*!
