@@ -124,6 +124,8 @@ typedef enum {
   kDLTPU = 19,
   /*! \brief Google TPU Host device (pinned memory) */
   kDLTPUHost = 20,
+  /*! \brief Huawei Ascend NPU device */
+  kDLAscend = 21,
 } DLDeviceType;
 
 /*!
