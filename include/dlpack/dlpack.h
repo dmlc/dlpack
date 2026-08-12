@@ -106,10 +106,11 @@ typedef enum {
    */
   kDLCUDAManaged = 13,
   /*!
-   * \brief Unified shared memory allocated on a oneAPI non-partititioned
-   * device. Call to oneAPI runtime is required to determine the device
-   * type, the USM allocation type and the sycl context it is bound to.
-   *
+   * \brief Unified shared memory allocated on a oneAPI non-partitioned
+   * device. Either a call to oneAPI runtime is required to determine the
+   * device type, the USM allocation type and the sycl context it is
+   * bound to, or the requisite information should be available via the
+   * `manager_ctx`.
    */
   kDLOneAPI = 14,
   /*! \brief GPU support for next generation WebGPU standard. */
