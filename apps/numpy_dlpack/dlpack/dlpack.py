@@ -95,6 +95,7 @@ class DLDataType(ctypes.Structure):
         "float16": (DLDataTypeCode.kDLFloat, 16, 1),
         "float32": (DLDataTypeCode.kDLFloat, 32, 1),
         "float64": (DLDataTypeCode.kDLFloat, 64, 1),
+        "float128": (DLDataTypeCode.kDLFloat, 128, 1),
         "complex64": (DLDataTypeCode.kDLComplex, 64, 1),
         "complex128": (DLDataTypeCode.kDLComplex, 128, 1)
     }
