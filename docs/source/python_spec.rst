@@ -42,7 +42,7 @@ the requesting (consumer) library does not support, it is recommended to raise a
 :obj:`BufferError`, unless an explicit copy is requested (see below) and the producer
 can support the request.
 
-Stream handling through the ``stream`` keyword applies to CUDA and ROCm (perhaps
+Stream handling through the ``stream`` keyword applies to CUDA, ROCm, and MUSA (perhaps
 to other devices that have a stream concept as well, however those haven't been
 considered in detail). The consumer must pass the stream it will use to the
 producer; the producer must synchronize or wait on the stream when necessary.
