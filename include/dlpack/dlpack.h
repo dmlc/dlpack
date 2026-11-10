@@ -126,6 +126,12 @@ typedef enum {
   kDLTPUHost = 20,
   /*! \brief Huawei Ascend NPU device */
   kDLAscend = 21,
+  /*! \brief Moore Threads MUSA GPU device memory */
+  kDLMUSA = 22,
+  /*! \brief Pinned MUSA host memory allocated by musaMallocHost or musaHostAlloc */
+  kDLMUSAHost = 23,
+  /*! \brief MUSA managed/unified memory allocated by musaMallocManaged */
+  kDLMUSAManaged = 24,
 } DLDeviceType;
 
 /*!
